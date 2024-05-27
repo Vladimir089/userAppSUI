@@ -11,6 +11,11 @@
 		157D789B2C0242A1001DED58 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 157D789A2C0242A1001DED58 /* ContentView.swift */; };
 		157D789D2C0242A3001DED58 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 157D789C2C0242A3001DED58 /* Assets.xcassets */; };
 		157D78A02C0242A3001DED58 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 157D789F2C0242A3001DED58 /* Preview Assets.xcassets */; };
+		157D78AC2C0244EC001DED58 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 157D78AB2C0244EC001DED58 /* Alamofire */; };
+		157D78B12C024502001DED58 /* AlamofireImage in Frameworks */ = {isa = PBXBuildFile; productRef = 157D78B02C024502001DED58 /* AlamofireImage */; };
+		157D78B32C024552001DED58 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 157D78B22C024552001DED58 /* Model.swift */; };
+		157D78B52C02458D001DED58 /* ViewModelOnContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 157D78B42C02458D001DED58 /* ViewModelOnContentView.swift */; };
+		157D78B92C04FFB5001DED58 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 157D78B82C04FFB5001DED58 /* SnapKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +24,9 @@
 		157D789A2C0242A1001DED58 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		157D789C2C0242A3001DED58 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		157D789F2C0242A3001DED58 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		157D78B22C024552001DED58 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
+		157D78B42C02458D001DED58 /* ViewModelOnContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelOnContentView.swift; sourceTree = "<group>"; };
+		157D78B62C024A18001DED58 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -26,6 +34,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				157D78AC2C0244EC001DED58 /* Alamofire in Frameworks */,
+				157D78B92C04FFB5001DED58 /* SnapKit in Frameworks */,
+				157D78B12C024502001DED58 /* AlamofireImage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -51,9 +62,11 @@
 		157D78972C0242A1001DED58 /* userAppSUI */ = {
 			isa = PBXGroup;
 			children = (
-				157D78982C0242A1001DED58 /* userAppSUIApp.swift */,
-				157D789A2C0242A1001DED58 /* ContentView.swift */,
-				157D789C2C0242A3001DED58 /* Assets.xcassets */,
+				157D78B62C024A18001DED58 /* Info.plist */,
+				157D78A92C0244BF001DED58 /* Support */,
+				157D78A82C0244B3001DED58 /* View */,
+				157D78A72C0244A8001DED58 /* ViewModel */,
+				157D78A62C0242BA001DED58 /* Model */,
 				157D789E2C0242A3001DED58 /* Preview Content */,
 			);
 			path = userAppSUI;
@@ -65,6 +78,39 @@
 				157D789F2C0242A3001DED58 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		157D78A62C0242BA001DED58 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				157D78B22C024552001DED58 /* Model.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		157D78A72C0244A8001DED58 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				157D78B42C02458D001DED58 /* ViewModelOnContentView.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		157D78A82C0244B3001DED58 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				157D789A2C0242A1001DED58 /* ContentView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		157D78A92C0244BF001DED58 /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				157D789C2C0242A3001DED58 /* Assets.xcassets */,
+				157D78982C0242A1001DED58 /* userAppSUIApp.swift */,
+			);
+			path = Support;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -83,6 +129,11 @@
 			dependencies = (
 			);
 			name = userAppSUI;
+			packageProductDependencies = (
+				157D78AB2C0244EC001DED58 /* Alamofire */,
+				157D78B02C024502001DED58 /* AlamofireImage */,
+				157D78B82C04FFB5001DED58 /* SnapKit */,
+			);
 			productName = userAppSUI;
 			productReference = 157D78952C0242A1001DED58 /* userAppSUI.app */;
 			productType = "com.apple.product-type.application";
@@ -111,6 +162,11 @@
 				Base,
 			);
 			mainGroup = 157D788C2C0242A1001DED58;
+			packageReferences = (
+				157D78AA2C0244EC001DED58 /* XCRemoteSwiftPackageReference "Alamofire" */,
+				157D78AF2C024502001DED58 /* XCRemoteSwiftPackageReference "AlamofireImage" */,
+				157D78B72C04FFB5001DED58 /* XCRemoteSwiftPackageReference "SnapKit" */,
+			);
 			productRefGroup = 157D78962C0242A1001DED58 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -137,7 +193,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				157D78B32C024552001DED58 /* Model.swift in Sources */,
 				157D789B2C0242A1001DED58 /* ContentView.swift in Sources */,
+				157D78B52C02458D001DED58 /* ViewModelOnContentView.swift in Sources */,
 				157D78992C0242A1001DED58 /* userAppSUIApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -275,6 +333,7 @@
 				DEVELOPMENT_TEAM = 6YA7577C98;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = userAppSUI/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -304,6 +363,7 @@
 				DEVELOPMENT_TEAM = 6YA7577C98;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = userAppSUI/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -344,6 +404,51 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		157D78AA2C0244EC001DED58 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.9.1;
+			};
+		};
+		157D78AF2C024502001DED58 /* XCRemoteSwiftPackageReference "AlamofireImage" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/AlamofireImage";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.3.0;
+			};
+		};
+		157D78B72C04FFB5001DED58 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		157D78AB2C0244EC001DED58 /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 157D78AA2C0244EC001DED58 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+		157D78B02C024502001DED58 /* AlamofireImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 157D78AF2C024502001DED58 /* XCRemoteSwiftPackageReference "AlamofireImage" */;
+			productName = AlamofireImage;
+		};
+		157D78B82C04FFB5001DED58 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 157D78B72C04FFB5001DED58 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 157D788D2C0242A1001DED58 /* Project object */;
 }
