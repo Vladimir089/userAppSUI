@@ -87,4 +87,12 @@ class Networking: ObservableObject {
         }
     }
     
+    
+    
+}
+
+class Order: ObservableObject {
+    @Published var orderArr: [(String, Int, Image, Int)] = []
+    
+    
 }
