@@ -136,11 +136,12 @@ struct CollectionView: UIViewRepresentable {
             
             let dish = parent.sections[section].1[row]
             
-            if let existingIndex =  parent.order.orderArr.firstIndex(where: { $0.0 == dish.0.name }) {
-                parent.order.orderArr[existingIndex].1 += 1
-                parent.order.orderArr[existingIndex].3 += dish.0.price
+            if let existingIndex =  parent.order.orderArr.firstIndex(where: { $0.name == dish.0.name }) {
+                parent.order.orderArr[existingIndex].quantity += 1
+                parent.order.orderArr[existingIndex].price += dish.0.price
             } else {
-                parent.order.orderArr.append((dish.0.name, 1, dish.1, dish.0.price))
+                let order = OrderItem(name: dish.0.name, quantity: 1, image: dish.1, price: dish.0.price)
+                parent.order.orderArr.append((order))
             }
         }
         
@@ -254,11 +255,13 @@ class DetailViewController: UIViewController {
             }
         }
         
-        if let existingIndex =  order.orderArr.firstIndex(where: { $0.0 == dish.0.name }) {
-            order.orderArr[existingIndex].1 += 1
-            order.orderArr[existingIndex].3 += dish.0.price
+        if let existingIndex =  order.orderArr.firstIndex(where: { $0.name == dish.0.name }) {
+            order.orderArr[existingIndex].quantity += 1
+            order.orderArr[existingIndex].price += dish.0.price
         } else {
-            order.orderArr.append((dish.0.name , 1, dish.1 , dish.0.price ))
+            let orderS = OrderItem(name: dish.0.name, quantity: 1, image: dish.1, price: dish.0.price)
+           
+            order.orderArr.append((orderS))
         }
     }
 }

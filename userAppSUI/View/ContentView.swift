@@ -7,6 +7,8 @@ struct ContentView: View {
     @State var selectedCategory = "РОЛЛЫ"
     @State var isButtonTapped = false
     @ObservedObject var order = Order()
+    @State var showingCart = false
+
     
     
     
@@ -65,10 +67,11 @@ struct ContentView: View {
                             HStack {
                                 Spacer()
                                 Button(action: {
-                                    //
+                                    showingCart = true
+                                    
                                 }) {
                                     
-                                    let sum = order.orderArr.reduce(0) { $0 + $1.3 }
+                                    let sum = order.orderArr.reduce(into: 0) { $0 += $1.price }
                                     Text("\(sum) ₽")
                                         .padding(.trailing, 45)
                                         .padding(.leading, 20)
@@ -82,18 +85,18 @@ struct ContentView: View {
                                         ForEach(0..<images.count, id: \.self) { index in
                                             let item = images[index]
                                             
-                                            Image(uiImage: item.2)
+                                            Image(uiImage: item.image)
                                                 .resizable()
                                                 .scaledToFit()
                                                 .background(Color(UIColor(red: 248/255, green: 102/255, blue: 6/255, alpha: 1)))
-                                                .clipShape(.circle)
+                                                .clipShape(Circle())
                                                 .frame(width: 60, height: 60)
                                                 .padding(.leading, -40)
                                                 .zIndex(Double(images.count - index))
                                                 .transition(.scale)
-                                            
                                         }
                                     }
+
                                     
                                 }
                                 .frame(height: 60)
@@ -101,6 +104,9 @@ struct ContentView: View {
                                 .background(Color(UIColor(red: 247/255, green: 102/255, blue: 6/255, alpha: 0.9)))
                                 .foregroundColor(.white)
                                 .clipShape(.capsule)
+                                .sheet(isPresented: $showingCart, content: {
+                                    CartView(order: order)
+                                })
                                 
                                 Spacer()
                             }

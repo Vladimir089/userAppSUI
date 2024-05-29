@@ -65,6 +65,7 @@ class Networking: ObservableObject {
     func getImage(d: Dish, completion: @escaping () -> Void) {
         if let url = d.img {
             AF.request("http://arbamarket.ru\(url)").responseImage { response in
+               print("http://arbamarket.ru\(url)")
                 switch response.result {
                 case .success(let image):
                     self.allDishes.append((d, image))
@@ -91,8 +92,14 @@ class Networking: ObservableObject {
     
 }
 
+struct OrderItem: Identifiable {
+    var id = UUID()
+    var name: String
+    var quantity: Int
+    var image: Image
+    var price: Int
+}
+
 class Order: ObservableObject {
-    @Published var orderArr: [(String, Int, Image, Int)] = []
-    
-    
+    @Published var orderArr: [OrderItem] = []
 }
