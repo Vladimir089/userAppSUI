@@ -11,6 +11,10 @@ struct CartView: View {
     
     @ObservedObject var order: Order
     @State var selectedSegment = "Доставка"
+    @State var dost = 0
+    @State var adress = "df"
+    
+    @StateObject var modelView = CartModelView()
     
     
     
@@ -68,11 +72,17 @@ struct CartView: View {
                                         Button(action: {
                                             if item.quantity != 0 {
                                                 item.quantity -= 1
+                                                modelView.getTotalCoast(adress: "df", order: order) {
+                                                    print("good")
+                                                }
                                             }
                                             if item.quantity == 0 {
                                                 if let index = order.orderArr.firstIndex(where: { $0.id == item.id }) {
                                                     withAnimation(.easeInOut(duration: 0.5)) {
                                                         order.orderArr.remove(at: index)
+                                                        modelView.getTotalCoast(adress: "df", order: order) {
+                                                            print("good")
+                                                        }
                                                     }
                                                 }
                                             }
@@ -95,6 +105,9 @@ struct CartView: View {
                                         Button(action: {
                                             if item.quantity != 10 {
                                                 item.quantity += 1
+                                                modelView.getTotalCoast(adress: "df", order: order) {
+                                                    print("good")
+                                                }
                                             }
                                         }) {
                                             Image(.plus)
@@ -112,12 +125,31 @@ struct CartView: View {
                             }
                             
                             
-                        }.transition(.slide)
+                        }.transition(.scale)
                         
                         
                     }
+                    Spacer(minLength: 15)
+                    HStack {
+                        Text("\($order.orderArr.count) \(productWordDeclension(count: $order.orderArr.count))")
+                            .font(.system(size: 18))
+                            .foregroundStyle(Color(UIColor(red: 126/255, green: 126/255, blue: 126/255, alpha: 1)))
+                        Spacer()
+                        let totalSum = order.orderArr.reduce(0) { $0 + $1.price }
+                        Text("\(totalSum)₽")
+                            .font(.system(size: 18))
+                            .foregroundStyle(Color(UIColor(red: 126/255, green: 126/255, blue: 126/255, alpha: 1)))
+                        
+                    }
                     
-                }.transition(.slide)
+                    HStack {
+                        Text("Доставка")
+                            .font(.system(size: 18))
+                            .foregroundStyle(Color(UIColor(red: 126/255, green: 126/255, blue: 126/255, alpha: 1)))
+                            
+                        
+                    }
+                }.transition(.scale)
             }
             
             .scrollContentBackground(.hidden)
@@ -125,6 +157,11 @@ struct CartView: View {
             
         }
         .background(Color(UIColor(red: 239/255, green: 239/255, blue: 244/255, alpha: 1)))
+    }
+    
+    func productWordDeclension(count: Int) -> String {
+        let cases = [2, 0, 1, 1, 1, 2]
+        return ["товар", "товара", "товаров"][(count%100>4 && count%100<20) ? 2 : cases[min(count%10, 5)]]
     }
 }
 
