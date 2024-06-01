@@ -105,7 +105,7 @@ struct ContentView: View {
                                 .foregroundColor(.white)
                                 .clipShape(.capsule)
                                 .sheet(isPresented: $showingCart, content: {
-                                    CartView(order: order)
+                                    CartView(order: order, mainObject: netWorking)
                                 })
                                 
                                 Spacer()

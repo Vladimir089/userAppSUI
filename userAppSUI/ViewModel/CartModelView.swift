@@ -7,11 +7,16 @@
 
 import Foundation
 import Alamofire
+import UIKit
+import SwiftUI
 
 var totalCoast = 0
 var adressCoast = 0
 
+
 class CartModelView: ObservableObject {
+    
+
     
     func getTotalCoast(adress: String?, order: Order, completion: @escaping () -> Void) {
         let headers: HTTPHeaders = [.accept("application/json")]
@@ -51,3 +56,6 @@ class CartModelView: ObservableObject {
     }
 
 }
+
+
+

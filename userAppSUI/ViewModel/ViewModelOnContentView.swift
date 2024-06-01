@@ -19,6 +19,7 @@ class Networking: ObservableObject {
     @Published var arrCategories = [String]()
     @Published var allDishes: [(Dish, Image)] = []
     @Published var isDataLoaded = false
+    @Published var adress: String = ""
     
     func getDishes(completion: @escaping(Error?)-> Void) {
         let headers: HTTPHeaders = [.authorization(bearerToken: token)]
