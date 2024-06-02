@@ -24,6 +24,7 @@ class Networking: ObservableObject {
     func getDishes(completion: @escaping(Error?)-> Void) {
         let headers: HTTPHeaders = [.authorization(bearerToken: token)]
         AF.request("http://arbamarket.ru/api/v1/main/get_dishes/?cafe_id=\(cafeID)", method: .get, headers: headers).response { response in
+            debugPrint(response)
             switch response.result {
             case .success(_):
                 if let status = response.response?.statusCode {
@@ -86,6 +87,25 @@ class Networking: ObservableObject {
     func checkCategory(category: String) {
         if !arrCategories.contains(category) {
             arrCategories.append(category)
+        }
+    }
+    
+    
+    func getAdress(adres: String, completion: @escaping ([String]) -> Void) {
+        let headers: HTTPHeaders = [.accept("application/json")]
+        AF.request("http://arbamarket.ru/api/v1/main/get_similar_addresses/?value=\(adres)", method: .get, headers: headers).responseJSON { response in
+            switch response.result {
+            case .success(let value):
+                guard let json = value as? [String: Any] else {
+                    print("Invalid JSON format")
+                    return
+                }
+                if let fullAddresses = json["full_addresses"] as? [String] {
+                    completion(fullAddresses)
+                }
+            case .failure(let error):
+                print("Request failed with error:", error)
+            }
         }
     }
     

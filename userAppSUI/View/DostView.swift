@@ -3,6 +3,7 @@ import SwiftUI
 struct DostView: View {
     @ObservedObject var model: Networking
     @Environment(\.presentationMode) var presentationMode
+    @State var adressArr: [String] = []
 
     var body: some View {
         VStack {
@@ -11,13 +12,12 @@ struct DostView: View {
                 .foregroundStyle(Color(UIColor(red: 229/255, green: 229/255, blue: 230/255, alpha: 1)))
                 .padding()
             HStack {
-                Spacer()
+                
                 
                 TextField("Улица, № дома, село", text: $model.adress)
                     .padding(.vertical, 7)
-                    .padding(.leading, 5)
-                    .padding(.trailing, 5)
-                    .padding(.horizontal, 10)
+                   
+                    .padding(.horizontal, 5)
                     .background(.white)
                     .clipShape(.capsule)
                     .overlay(
@@ -31,6 +31,11 @@ struct DostView: View {
                             }
                         }
                     )
+                    .onChange(of: model.adress) { newValue in
+                        model.getAdress(adres: newValue) { fullAddresses in
+                            adressArr = fullAddresses
+                        }
+                    }
                     
                 
                 Spacer()
@@ -41,15 +46,20 @@ struct DostView: View {
                     Text("Готово")
                 }
                 .padding(.vertical, 7)
-                .padding(.horizontal, 10)
+                .padding(.horizontal, 5)
                 .background(.white)
                 .clipShape(.capsule)
                 Spacer()
             }.padding(.horizontal)
-            Spacer()
+            
             
             List {
-                Text("dsf") //ТУТ ДОДЕЛАТЬ
+                ForEach(adressArr.indices, id: \.self) { i in
+                    Text(adressArr[i])
+                        .onTapGesture {
+                            model.adress = adressArr[i]  // Обновляем выбранный адрес при нажатии на ячейку
+                        }
+                }
             }.scrollContentBackground(.hidden)
         }
         .background(Color(UIColor(red: 239/255, green: 239/255, blue: 244/255, alpha: 1)))
