@@ -4,8 +4,12 @@ struct DostView: View {
     @ObservedObject var model: Networking
     @Environment(\.presentationMode) var presentationMode
     @State var adressArr: [String] = []
+    @State var adr = ""
+
+    
 
     var body: some View {
+        
         VStack {
             Rectangle().frame(width: 50, height: 4)
                 .cornerRadius(2)
@@ -14,9 +18,8 @@ struct DostView: View {
             HStack {
                 
                 
-                TextField("Улица, № дома, село", text: $model.adress)
+                TextField("Улица, № дома, село", text: $adr)
                     .padding(.vertical, 7)
-                   
                     .padding(.horizontal, 5)
                     .background(.white)
                     .clipShape(.capsule)
@@ -25,17 +28,21 @@ struct DostView: View {
                             Spacer()
                             Button(action: {
                                 self.model.adress = ""
+                                adr = ""
                             }) {
                                 Image(systemName: "xmark.circle.fill")
                                     .padding(.trailing, 10)
                             }
                         }
                     )
-                    .onChange(of: model.adress) { newValue in
+                    .onChange(of: adr) { newValue in
                         model.getAdress(adres: newValue) { fullAddresses in
                             adressArr = fullAddresses
                         }
                     }
+                    .onAppear(perform: {
+                        adr = model.adress
+                    })
                     
                 
                 Spacer()
@@ -58,6 +65,7 @@ struct DostView: View {
                     Text(adressArr[i])
                         .onTapGesture {
                             model.adress = adressArr[i]  // Обновляем выбранный адрес при нажатии на ячейку
+                            adr = model.adress
                         }
                 }
             }.scrollContentBackground(.hidden)

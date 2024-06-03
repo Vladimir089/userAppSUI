@@ -1,5 +1,6 @@
 import SwiftUI
 
+
 struct CartView: View {
     
     @State private var keyboardHeight: CGFloat = 0
@@ -8,15 +9,17 @@ struct CartView: View {
     @State var dost = 0
     @State private var isEditing = false
     @FocusState private var phoneNumberIsFocused: Bool
+    @FocusState private var commentIsFocused: Bool
     @ObservedObject var mainObject: Networking
-   
+    @State private var isEditingText = false
+    
     
     @State private var phoneNumber = ""
     private let phoneFormatter = PhoneNumberFormatter()
     
     @StateObject var modelView = CartModelView()
     
-
+    
     var body: some View {
         NavigationView {
             VStack {
@@ -109,7 +112,7 @@ struct CartView: View {
                                         }
                                     }
                                 }.transition(.scale)
-                                    
+                                
                             }
                             Spacer(minLength: 15)
                             
@@ -154,27 +157,19 @@ struct CartView: View {
                     Section {
                         VStack {
                             TextField("Номер телефона", text: $phoneNumber, onEditingChanged: { editing in
-                                            self.isEditing = editing
-                                        })
-                                        .keyboardType(.numberPad)
-                                        .focusable()
-                                        .focused($phoneNumberIsFocused)
-                                        .navigationBarTitleDisplayMode(.inline)
-                                        .toolbar {
-                                            ToolbarItemGroup(placement: .keyboard) {
-                                                
-                                                if phoneNumberIsFocused {
-                                                    Button("Готово") {
-                                                        phoneNumberIsFocused = false
-                                                    }.padding(.leading, 200)
-                                                }
-                                            }
-                                        }
-                                        .onChange(of: phoneNumber) { newValue in
-                                            mainObject.adress = "dsfdsfdsfsdfs"
-                                            print(mainObject.adress)
-                                            phoneNumber = phoneFormatter.format(with: "+# (###) ### ####", phone: newValue)
-                                        }
+                                self.isEditing = editing
+                            })
+                            .keyboardType(.numbersAndPunctuation)
+                            .focusable()
+                            .focused($phoneNumberIsFocused)
+                            .navigationBarTitleDisplayMode(.inline)
+                            .onSubmit {
+                                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                            }
+                            .onChange(of: phoneNumber) { newValue in
+                                print(mainObject.adress)
+                                phoneNumber = phoneFormatter.format(with: "+# (###) ### ####", phone: newValue)
+                            }
                             Divider()
                             
                             
@@ -182,7 +177,7 @@ struct CartView: View {
                                 destination: DostView(model: mainObject)) {
                                     if mainObject.adress.isEmpty {
                                         Text("Адрес доставки")
-                                            .foregroundStyle(Color(UIColor.systemGray3))
+                                            .foregroundStyle(.black)
                                     } else {
                                         Text(mainObject.adress)
                                             .foregroundStyle(.black)
@@ -193,8 +188,63 @@ struct CartView: View {
                             
                             Divider()
                             
+                            HStack {
+                                Text("Кол-во приборов")
+                                Spacer()
+                                ZStack(alignment: .center) {
+                                    Rectangle()
+                                        .foregroundStyle(Color(UIColor(red: 242/255, green: 242/255, blue: 248/255, alpha: 1)))
+                                        .frame(width: 103, height: 34)
+                                        .clipShape(.buttonBorder)
+                                        .padding(.top, 5)
+                                    HStack(alignment: .center) {
+                                        Image(.minus) // Изображение для кнопки
+                                            .resizable()
+                                            .frame(width: 12, height: 2)
+                                            .padding(5) // Увеличивает область нажатия на 5 points
+                                            .contentShape(Rectangle())
+                                            .onTapGesture {
+                                                if mainObject.pribor != 1 {
+                                                    mainObject.pribor -= 1
+                                                }
+                                            }
+                                            .padding(.top, 3.5)
+                                            .frame(width: 24, height: 24)
+                                        
+                                        Text("\(mainObject.pribor)")
+                                            .padding(.horizontal, 4)
+                                        
+                                        Image(.plus) // Изображение для кнопки
+                                            .resizable()
+                                            .frame(width: 12, height: 12)
+                                            .padding(5) // Увеличивает область нажатия на 5 points
+                                            .contentShape(Rectangle())
+                                            .onTapGesture {
+                                                if mainObject.pribor != 10 {
+                                                    mainObject.pribor += 1
+                                                }
+                                            }
+                                        
+                                            .padding(.top, 3.5)
+                                            .frame(width: 24, height: 24)
+                                        
+                                    }
+                                }.padding(.bottom, 5)
+                            }.frame(height: 30)
                             
+                            Divider()
                             
+                            TextField("Комментарий к заказу", text: $mainObject.commentOrder, onEditingChanged: { editing in
+                                self.isEditingText = editing
+                            })
+                            .navigationBarTitleDisplayMode(.inline)
+                            .onSubmit {
+                                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                            }
+                            .onChange(of: mainObject.commentOrder) { newValue in
+                                print(mainObject.commentOrder)
+                               
+                            }
                             
                             
                         }
@@ -224,12 +274,21 @@ struct CartView: View {
     }
     
     func hideKeyboard() {
-           UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-       }
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
     
     func productWordDeclension(count: Int) -> String {
         let cases = [2, 0, 1, 1, 1, 2]
         return ["товар", "товара", "товаров"][(count%100>4 && count%100<20) ? 2 : cases[min(count%10, 5)]]
+    }
+    
+    private func generateToolbar(for textField: UITextField) -> UIToolbar {
+        let toolbar = UIToolbar()
+        toolbar.sizeToFit()
+        let flexButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil)
+        let doneButton = UIBarButtonItem(title: "Готово", style: .done, target: textField, action: #selector(UITextField.resignFirstResponder))
+        toolbar.items = [flexButton, doneButton]
+        return toolbar
     }
 }
 
