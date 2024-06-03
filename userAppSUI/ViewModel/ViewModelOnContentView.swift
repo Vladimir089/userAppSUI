@@ -22,6 +22,7 @@ class Networking: ObservableObject {
     @Published var adress: String = ""
     @Published var pribor = 1
     @Published var commentOrder = ""
+    @Published var summ = 0
     
     func getDishes(completion: @escaping(Error?)-> Void) {
         let headers: HTTPHeaders = [.authorization(bearerToken: token)]

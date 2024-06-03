@@ -10,8 +10,8 @@ import Alamofire
 import UIKit
 import SwiftUI
 
-var totalCoast = 0
-var adressCoast = 0
+var totalCoast = 121212
+var adressCoast = 343434
 
 
 class CartModelView: ObservableObject {

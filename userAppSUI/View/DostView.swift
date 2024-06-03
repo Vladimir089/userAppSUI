@@ -5,6 +5,7 @@ struct DostView: View {
     @Environment(\.presentationMode) var presentationMode
     @State var adressArr: [String] = []
     @State var adr = ""
+    @ObservedObject var modelDost: CartModelView
 
     
 
@@ -72,6 +73,11 @@ struct DostView: View {
         }
         .background(Color(UIColor(red: 239/255, green: 239/255, blue: 244/255, alpha: 1)))
         .navigationBarBackButtonHidden(true)
+        .onAppear {
+            model.getAdress(adres: " ") { fullAddresses in
+                adressArr = fullAddresses
+            }
+        }
     }
 }
 

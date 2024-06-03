@@ -22,6 +22,7 @@ struct CollectionView: UIViewRepresentable {
         layout.scrollDirection = .vertical
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         layout.minimumLineSpacing = 30
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 30, right: 0)  // Устанавливает отступы для каждой сек
         collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "Cell")
         collectionView.showsVerticalScrollIndicator = false
         collectionView.dataSource = context.coordinator
@@ -58,10 +59,13 @@ struct CollectionView: UIViewRepresentable {
         }
         
         func numberOfSections(in collectionView: UICollectionView) -> Int {
-            return parent.sections.count
+            return parent.sections.count + 1
         }
         
         func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+            if section == parent.sections.count {
+                    return 0 //В последней секции ноль элементов
+                }
             return parent.sections[section].1.count
         }
         
@@ -112,6 +116,7 @@ struct CollectionView: UIViewRepresentable {
                 make.bottom.equalToSuperview().inset(7)
             }
             
+            
             return cell
         }
         
@@ -138,7 +143,7 @@ struct CollectionView: UIViewRepresentable {
             
             if let existingIndex =  parent.order.orderArr.firstIndex(where: { $0.name == dish.0.name }) {
                 parent.order.orderArr[existingIndex].quantity += 1
-                parent.order.orderArr[existingIndex].price += dish.0.price
+
             } else {
                 let order = OrderItem(name: dish.0.name, quantity: 1, image: dish.1, price: dish.0.price)
                 parent.order.orderArr.append((order))
@@ -154,6 +159,13 @@ struct CollectionView: UIViewRepresentable {
                     NotificationCenter.default.post(name: .updateScrolledCategory, object: category)
                 }
             }
+        }
+        
+        func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+            if section == parent.sections.count {
+                return CGSize(width: collectionView.frame.width, height: 30) //Устанавливаем размер последней секции
+            }
+            return CGSize(width: collectionView.frame.width, height: 0) //Для всех других секций размер равен 0
         }
         
         func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

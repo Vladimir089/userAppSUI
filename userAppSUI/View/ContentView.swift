@@ -71,8 +71,8 @@ struct ContentView: View {
                                     
                                 }) {
                                     
-                                    let sum = order.orderArr.reduce(into: 0) { $0 += $1.price }
-                                    Text("\(sum) ₽")
+                                    //let sum = order.orderArr.reduce(into: 0) { $0 += ($1.price * $1.quantity) }
+                                    Text("\(checkSumm()) ₽")
                                         .padding(.trailing, 45)
                                         .padding(.leading, 20)
                                         .font(.system(size: 24))
@@ -124,6 +124,8 @@ struct ContentView: View {
                     print(netWorking.allDishes)
                 }
             }
+            
+           
         }
         .onAppear {
             NotificationCenter.default.addObserver(forName: .updateScrolledCategory, object: nil, queue: .main) { (notification) in
@@ -133,6 +135,14 @@ struct ContentView: View {
             }
             
         }
+        
+    }
+    func checkSumm() -> Int {
+        var sum = 0
+        for i in order.orderArr {
+            sum += i.quantity * i.price
+        }
+        return sum
     }
 }
 

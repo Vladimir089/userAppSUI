@@ -20,6 +20,7 @@ struct CartView: View {
     @StateObject var modelView = CartModelView()
     
     
+    
     var body: some View {
         NavigationView {
             VStack {
@@ -52,7 +53,7 @@ struct CartView: View {
                                                 .padding(.bottom, -5)
                                             
                                             Spacer(minLength: 1)
-                                            Text("\(item.price) ₽")
+                                            Text("\(item.price * item.quantity) ₽")
                                                 .font(.system(size: 15))
                                                 .foregroundStyle(Color(UIColor(red: 182/255, green: 182/255, blue: 182/255, alpha: 1)))
                                         }.frame(height: 50)
@@ -121,8 +122,7 @@ struct CartView: View {
                                     .font(.system(size: 18))
                                     .foregroundStyle(Color(UIColor(red: 126/255, green: 126/255, blue: 126/255, alpha: 1)))
                                 Spacer()
-                                let totalSum = order.orderArr.reduce(0) { $0 + $1.price }
-                                Text("\(totalSum) ₽")
+                                Text("\(checkSumm() + adressCoast) ₽")
                                     .font(.system(size: 18))
                                     .foregroundStyle(Color(UIColor(red: 126/255, green: 126/255, blue: 126/255, alpha: 1)))
                             }.padding(.bottom, 5)
@@ -174,7 +174,7 @@ struct CartView: View {
                             
                             
                             NavigationLink(
-                                destination: DostView(model: mainObject)) {
+                                destination: DostView(model: mainObject, modelDost: modelView)) {
                                     if mainObject.adress.isEmpty {
                                         Text("Адрес доставки")
                                             .foregroundStyle(.black)
@@ -289,6 +289,14 @@ struct CartView: View {
         let doneButton = UIBarButtonItem(title: "Готово", style: .done, target: textField, action: #selector(UITextField.resignFirstResponder))
         toolbar.items = [flexButton, doneButton]
         return toolbar
+    }
+    
+    func checkSumm() -> Int {
+        var sum = 0
+        for i in order.orderArr {
+            sum += i.quantity * i.price
+        }
+        return sum
     }
 }
 
