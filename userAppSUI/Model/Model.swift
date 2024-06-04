@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import ActivityKit
 
 struct Dish: Codable {
     let id: Int
@@ -23,3 +24,21 @@ enum methodButton {
     case plus
     case minus
 }
+
+struct Dost: ActivityAttributes{
+    public struct ContentState: Codable, Hashable {
+        var id: Int
+        var isHighlighted: Bool
+        var time: String
+        var message: String
+        var wasFirstStepCompleted: Bool
+        var wasSecondStepCompleted: Bool
+        var wasThirdStepCompleted: Bool
+        var imageOne: String
+        var imageTwo: String
+        var imageThree: String
+    }
+    var id: Int
+   
+}
+

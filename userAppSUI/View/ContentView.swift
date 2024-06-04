@@ -8,7 +8,7 @@ struct ContentView: View {
     @State var isButtonTapped = false
     @ObservedObject var order = Order()
     @State var showingCart = false
-
+    @ObservedObject var checkStatusModelView = checkStatus()
     
     
     
@@ -105,7 +105,7 @@ struct ContentView: View {
                                 .foregroundColor(.white)
                                 .clipShape(.capsule)
                                 .sheet(isPresented: $showingCart, content: {
-                                    CartView(order: order, mainObject: netWorking)
+                                    CartView(order: order, mainObject: netWorking, statusBard: checkStatusModelView)
                                 })
                                 
                                 Spacer()
@@ -115,7 +115,16 @@ struct ContentView: View {
                             
                         }
                     }
+                    Spacer()
+                    if let orderId = orderID["orderId"] as? Int {
+                        if orderId != 0 {
+                            checkStatusModelView.checkStatus()
+                        }
+                    }
                 }
+                
+                
+                
             }
             .ignoresSafeArea(edges: .bottom)
             .padding(.horizontal)
@@ -133,6 +142,8 @@ struct ContentView: View {
                     self.selectedCategory = category
                 }
             }
+            netWorking.checkuser()
+            
             
         }
         

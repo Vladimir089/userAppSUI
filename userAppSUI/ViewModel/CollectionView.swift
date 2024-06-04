@@ -121,10 +121,8 @@ struct CollectionView: UIViewRepresentable {
         }
         
         @objc func addToCart(button: UIButton) {
-            
             let originalColor = button.backgroundColor
             let originalColorToText = button.tintColor
-            
             UIView.animate(withDuration: 0.4) {
                 button.tintColor = .white
                 button.backgroundColor = .systemGreen
@@ -274,6 +272,7 @@ class DetailViewController: UIViewController {
             let orderS = OrderItem(name: dish.0.name, quantity: 1, image: dish.1, price: dish.0.price)
            
             order.orderArr.append((orderS))
+            self.dismiss(animated: true, completion: nil)
         }
     }
 }

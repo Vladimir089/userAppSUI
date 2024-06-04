@@ -11,13 +11,17 @@ struct CartView: View {
     @FocusState private var phoneNumberIsFocused: Bool
     @FocusState private var commentIsFocused: Bool
     @ObservedObject var mainObject: Networking
-    @State private var isEditingText = false
+    @State  var isEditingText = false
+    @State  var isNewOrder = true
+    @State  var buttonHighlight = false
+    @State  var buttonTitle = "Оформить заказ \(totalCoast) ₽"
+    @State private var isButtonTap = false
     
     
-    @State private var phoneNumber = ""
     private let phoneFormatter = PhoneNumberFormatter()
     
     @StateObject var modelView = CartModelView()
+    @StateObject var statusBard: checkStatus
     
     
     
@@ -32,229 +36,289 @@ struct CartView: View {
                 SegmentedPicker(selectedSegment: $selectedSegment, segments: ["Доставка", "Самовывоз"])
                     .padding(.horizontal)
                     .frame(height: 44)
-                
-                Form {
-                    Section {
-                        ScrollView {
-                            ForEach($order.orderArr) { $item in
-                                VStack(alignment: .center) {
-                                    Spacer()
-                                    HStack(alignment: .center) {
-                                        Image(uiImage: item.image)
-                                            .resizable()
-                                            .frame(width: 50, height: 50)
-                                        
-                                        VStack(alignment: .leading) {
-                                            Text(item.name)
-                                                .lineSpacing(-2)
-                                                .font(.system(size: 15))
-                                                .lineLimit(2)
-                                                .lineSpacing(-2)
-                                                .padding(.bottom, -5)
-                                            
-                                            Spacer(minLength: 1)
-                                            Text("\(item.price * item.quantity) ₽")
-                                                .font(.system(size: 15))
-                                                .foregroundStyle(Color(UIColor(red: 182/255, green: 182/255, blue: 182/255, alpha: 1)))
-                                        }.frame(height: 50)
-                                        
+                ZStack {
+                    
+                    
+                    Form {
+                        Section {
+                            ScrollView {
+                                ForEach($order.orderArr) { $item in
+                                    VStack(alignment: .center) {
                                         Spacer()
-                                        ZStack(alignment: .center) {
-                                            Rectangle()
-                                                .foregroundStyle(Color(UIColor(red: 242/255, green: 242/255, blue: 248/255, alpha: 1)))
-                                                .frame(width: 103, height: 44)
-                                                .clipShape(.buttonBorder)
-                                                .padding(.top, 5)
-                                            HStack(alignment: .center) {
-                                                Button(action: {
-                                                    if item.quantity != 0 {
-                                                        item.quantity -= 1
-                                                        modelView.getTotalCoast(adress: "df", order: order) {
-                                                            print("good")
+                                        HStack(alignment: .center) {
+                                            Image(uiImage: item.image)
+                                                .resizable()
+                                                .frame(width: 50, height: 50)
+                                            
+                                            VStack(alignment: .leading) {
+                                                Text(item.name)
+                                                    .lineSpacing(-2)
+                                                    .font(.system(size: 15))
+                                                    .lineLimit(2)
+                                                    .lineSpacing(-2)
+                                                    .padding(.bottom, -5)
+                                                
+                                                Spacer(minLength: 1)
+                                                Text("\(item.price * item.quantity) ₽")
+                                                    .font(.system(size: 15))
+                                                    .foregroundStyle(Color(UIColor(red: 182/255, green: 182/255, blue: 182/255, alpha: 1)))
+                                            }.frame(height: 50)
+                                            
+                                            Spacer()
+                                            ZStack(alignment: .center) {
+                                                Rectangle()
+                                                    .foregroundStyle(Color(UIColor(red: 242/255, green: 242/255, blue: 248/255, alpha: 1)))
+                                                    .frame(width: 103, height: 44)
+                                                    .clipShape(.buttonBorder)
+                                                    .padding(.top, 5)
+                                                HStack(alignment: .center) {
+                                                    Button(action: {
+                                                        if item.quantity != 0 {
+                                                            item.quantity -= 1
+                                                            modelView.getTotalCoast(adress: "df", order: order) {
+                                                                print("good")
+                                                            }
                                                         }
-                                                    }
-                                                    if item.quantity == 0 {
-                                                        if let index = order.orderArr.firstIndex(where: { $0.id == item.id }) {
-                                                            withAnimation(.easeInOut(duration: 0.5)) {
-                                                                order.orderArr.remove(at: index)
-                                                                modelView.getTotalCoast(adress: "df", order: order) {
-                                                                    print("good")
+                                                        if item.quantity == 0 {
+                                                            if let index = order.orderArr.firstIndex(where: { $0.id == item.id }) {
+                                                                withAnimation(.easeInOut(duration: 0.5)) {
+                                                                    order.orderArr.remove(at: index)
+                                                                    modelView.getTotalCoast(adress: "df", order: order) {
+                                                                        print("good")
+                                                                    }
                                                                 }
                                                             }
                                                         }
+                                                    }) {
+                                                        Image(.minus)
+                                                            .resizable()
+                                                            .frame(width: 12, height: 2)
+                                                            .padding()
                                                     }
-                                                }) {
-                                                    Image(.minus)
-                                                        .resizable()
-                                                        .frame(width: 12, height: 2)
-                                                        .padding()
-                                                }
-                                                .frame(width: 24, height: 24)
-                                                .padding(.top, 3.5)
-                                                
-                                                Text("\(item.quantity)")
-                                                    .padding(.horizontal, 4)
-                                                
-                                                Button(action: {
-                                                    if item.quantity != 10 {
-                                                        item.quantity += 1
-                                                        modelView.getTotalCoast(adress: "df", order: order) {
-                                                            print("good")
+                                                    .frame(width: 24, height: 24)
+                                                    .padding(.top, 3.5)
+                                                    
+                                                    Text("\(item.quantity)")
+                                                        .padding(.horizontal, 4)
+                                                    
+                                                    Button(action: {
+                                                        if item.quantity != 10 {
+                                                            item.quantity += 1
+                                                            modelView.getTotalCoast(adress: "df", order: order) {
+                                                                print("good")
+                                                            }
                                                         }
+                                                    }) {
+                                                        Image(.plus)
+                                                            .resizable()
+                                                            .frame(width: 12, height: 12)
                                                     }
-                                                }) {
-                                                    Image(.plus)
-                                                        .resizable()
-                                                        .frame(width: 12, height: 12)
+                                                    .frame(width: 24, height: 24)
+                                                    .padding(.top, 3.5)
                                                 }
-                                                .frame(width: 24, height: 24)
-                                                .padding(.top, 3.5)
                                             }
                                         }
+                                    }.transition(.scale)
+                                    
+                                }
+                                Spacer(minLength: 15)
+                                
+                                HStack {
+                                    Text("\($order.orderArr.count) \(productWordDeclension(count: $order.orderArr.count))")
+                                        .font(.system(size: 18))
+                                        .foregroundStyle(Color(UIColor(red: 126/255, green: 126/255, blue: 126/255, alpha: 1)))
+                                    Spacer()
+                                    Text("\(checkSumm() + adressCoast) ₽")
+                                        .font(.system(size: 18))
+                                        .foregroundStyle(Color(UIColor(red: 126/255, green: 126/255, blue: 126/255, alpha: 1)))
+                                }.padding(.bottom, 5)
+                                    .padding(.top, 5)
+                                
+                                Spacer()
+                                
+                                HStack {
+                                    Text("Доставка")
+                                        .font(.system(size: 18))
+                                        .foregroundStyle(Color(UIColor(red: 126/255, green: 126/255, blue: 126/255, alpha: 1)))
+                                    Spacer()
+                                    Text("\(adressCoast) тут цена ₽")
+                                        .font(.system(size: 18))
+                                        .foregroundStyle(Color(UIColor(red: 126/255, green: 126/255, blue: 126/255, alpha: 1)))
+                                }.padding(.bottom, 5)
+                                
+                                Divider()
+                                HStack {
+                                    Text("Итого")
+                                        .font(.system(size: 18))
+                                    Spacer()
+                                    
+                                    Text("\(totalCoast) тут цена ₽")
+                                        .font(.system(size: 18))
+                                }.padding(.top, 5)
+                            }
+                            
+                            
+                        }.transition(.scale)
+                        
+                        Section {
+                            VStack {
+                                TextField("Номер телефона", text: $mainObject.phoneNumber, onEditingChanged: { editing in
+                                    self.isEditing = editing
+                                })
+                                .keyboardType(.numbersAndPunctuation)
+                                .focusable()
+                                .focused($phoneNumberIsFocused)
+                                .navigationBarTitleDisplayMode(.inline)
+                                .onSubmit {
+                                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                                }
+                                .onChange(of: mainObject.phoneNumber) { newValue in
+                                    print(mainObject.adress)
+                                    mainObject.phoneNumber = phoneFormatter.format(with: "+# (###) ### ####", phone: newValue)
+                                }
+                                Divider()
+                                
+                                
+                                NavigationLink(
+                                    destination: DostView(model: mainObject, modelDost: modelView)) {
+                                        if mainObject.adress.isEmpty {
+                                            Text("Адрес доставки")
+                                                .foregroundStyle(.black)
+                                        } else {
+                                            Text(mainObject.adress)
+                                                .foregroundStyle(.black)
+                                        }
                                     }
-                                }.transition(.scale)
+                                    .buttonStyle(PlainButtonStyle())
+                                    .padding(.vertical, 2)
+                                
+                                Divider()
+                                
+                                HStack {
+                                    Text("Кол-во приборов")
+                                    Spacer()
+                                    ZStack(alignment: .center) {
+                                        Rectangle()
+                                            .foregroundStyle(Color(UIColor(red: 242/255, green: 242/255, blue: 248/255, alpha: 1)))
+                                            .frame(width: 103, height: 34)
+                                            .clipShape(.buttonBorder)
+                                            .padding(.top, 5)
+                                        HStack(alignment: .center) {
+                                            Image(.minus) // Изображение для кнопки
+                                                .resizable()
+                                                .frame(width: 12, height: 2)
+                                                .padding(5) // Увеличивает область нажатия на 5 points
+                                                .contentShape(Rectangle())
+                                                .onTapGesture {
+                                                    if mainObject.pribor != 1 {
+                                                        mainObject.pribor -= 1
+                                                    }
+                                                }
+                                                .padding(.top, 3.5)
+                                                .frame(width: 24, height: 24)
+                                            
+                                            Text("\(mainObject.pribor)")
+                                                .padding(.top, 4)
+                                            
+                                            Image(.plus) // Изображение для кнопки
+                                                .resizable()
+                                                .frame(width: 12, height: 12)
+                                                .padding(5) // Увеличивает область нажатия на 5 points
+                                                .contentShape(Rectangle())
+                                                .onTapGesture {
+                                                    if mainObject.pribor != 10 {
+                                                        mainObject.pribor += 1
+                                                    }
+                                                }
+                                            
+                                                .padding(.top, 3.5)
+                                                .frame(width: 24, height: 24)
+                                            
+                                        }
+                                    }.padding(.bottom, 5)
+                                }.frame(height: 30)
+                                
+                                Divider()
+                                
+                                TextField("Комментарий к заказу", text: $mainObject.commentOrder, onEditingChanged: { editing in
+                                    self.isEditingText = editing
+                                })
+                                .navigationBarTitleDisplayMode(.inline)
+                                .onSubmit {
+                                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                                }
+                                .onChange(of: mainObject.commentOrder) { newValue in
+                                    print(mainObject.commentOrder)
+                                    
+                                }
+                                
                                 
                             }
-                            Spacer(minLength: 15)
-                            
-                            HStack {
-                                Text("\($order.orderArr.count) \(productWordDeclension(count: $order.orderArr.count))")
-                                    .font(.system(size: 18))
-                                    .foregroundStyle(Color(UIColor(red: 126/255, green: 126/255, blue: 126/255, alpha: 1)))
-                                Spacer()
-                                Text("\(checkSumm() + adressCoast) ₽")
-                                    .font(.system(size: 18))
-                                    .foregroundStyle(Color(UIColor(red: 126/255, green: 126/255, blue: 126/255, alpha: 1)))
-                            }.padding(.bottom, 5)
-                                .padding(.top, 5)
-                            
-                            Spacer()
-                            
-                            HStack {
-                                Text("Доставка")
-                                    .font(.system(size: 18))
-                                    .foregroundStyle(Color(UIColor(red: 126/255, green: 126/255, blue: 126/255, alpha: 1)))
-                                Spacer()
-                                Text("\(adressCoast) тут цена ₽")
-                                    .font(.system(size: 18))
-                                    .foregroundStyle(Color(UIColor(red: 126/255, green: 126/255, blue: 126/255, alpha: 1)))
-                            }.padding(.bottom, 5)
-                            
-                            Divider()
-                            HStack {
-                                Text("Итого")
-                                    .font(.system(size: 18))
-                                Spacer()
-                                
-                                Text("\(totalCoast) тут цена ₽")
-                                    .font(.system(size: 18))
-                            }.padding(.top, 5)
                         }
                         
                         
                     }.transition(.scale)
-                    
-                    Section {
-                        VStack {
-                            TextField("Номер телефона", text: $phoneNumber, onEditingChanged: { editing in
-                                self.isEditing = editing
-                            })
-                            .keyboardType(.numbersAndPunctuation)
-                            .focusable()
-                            .focused($phoneNumberIsFocused)
-                            .navigationBarTitleDisplayMode(.inline)
-                            .onSubmit {
-                                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-                            }
-                            .onChange(of: phoneNumber) { newValue in
-                                print(mainObject.adress)
-                                phoneNumber = phoneFormatter.format(with: "+# (###) ### ####", phone: newValue)
-                            }
-                            Divider()
-                            
-                            
-                            NavigationLink(
-                                destination: DostView(model: mainObject, modelDost: modelView)) {
-                                    if mainObject.adress.isEmpty {
-                                        Text("Адрес доставки")
-                                            .foregroundStyle(.black)
+                        .scrollContentBackground(.hidden)
+                   
+                    VStack {
+                        Spacer()
+                        if keyboardHeight == 0 {
+                            Button {
+                                let menuStrings = order.orderArr.map { item in
+                                    return "\(item.name) - \(item.quantity)"
+                                }
+                                let menu = menuStrings.joined(separator: ", ")
+                                isButtonTap = true
+                                mainObject.createNewOrder(phonee: mainObject.phoneNumber, menuItems: menu, clientsNumber: mainObject.pribor, adres: mainObject.adress, totalCost: totalCoast, paymentMethod: "наличка", timeOrder: "", cafeID: cafeID) { success in
+                                    if success {
+                                        withAnimation {
+                                            isNewOrder = true
+                                            buttonHighlight = true
+                                            buttonTitle = "Заказ оформлен"
+                                        }
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                                            withAnimation {
+                                                statusBard.start()
+                                                isButtonTap = false
+                                                buttonHighlight = false
+                                                buttonTitle = "Оформить заказ \(totalCoast) ₽"
+                                            }
+                                        }
+                                       
                                     } else {
-                                        Text(mainObject.adress)
-                                            .foregroundStyle(.black)
+                                        withAnimation {
+                                            isNewOrder = false
+                                            buttonHighlight = false
+                                            buttonTitle = "Заказ не создан"
+                                        }
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                                            withAnimation {
+                                                isButtonTap = false
+                                                buttonHighlight = false
+                                                buttonTitle = "Оформить заказ \(totalCoast) ₽"
+                                            }
+                                        }
+                                        
                                     }
                                 }
-                                .buttonStyle(PlainButtonStyle())
-                                .padding(.vertical, 2)
-                            
-                            Divider()
-                            
-                            HStack {
-                                Text("Кол-во приборов")
-                                Spacer()
-                                ZStack(alignment: .center) {
-                                    Rectangle()
-                                        .foregroundStyle(Color(UIColor(red: 242/255, green: 242/255, blue: 248/255, alpha: 1)))
-                                        .frame(width: 103, height: 34)
-                                        .clipShape(.buttonBorder)
-                                        .padding(.top, 5)
-                                    HStack(alignment: .center) {
-                                        Image(.minus) // Изображение для кнопки
-                                            .resizable()
-                                            .frame(width: 12, height: 2)
-                                            .padding(5) // Увеличивает область нажатия на 5 points
-                                            .contentShape(Rectangle())
-                                            .onTapGesture {
-                                                if mainObject.pribor != 1 {
-                                                    mainObject.pribor -= 1
-                                                }
-                                            }
-                                            .padding(.top, 3.5)
-                                            .frame(width: 24, height: 24)
-                                        
-                                        Text("\(mainObject.pribor)")
-                                            .padding(.horizontal, 4)
-                                        
-                                        Image(.plus) // Изображение для кнопки
-                                            .resizable()
-                                            .frame(width: 12, height: 12)
-                                            .padding(5) // Увеличивает область нажатия на 5 points
-                                            .contentShape(Rectangle())
-                                            .onTapGesture {
-                                                if mainObject.pribor != 10 {
-                                                    mainObject.pribor += 1
-                                                }
-                                            }
-                                        
-                                            .padding(.top, 3.5)
-                                            .frame(width: 24, height: 24)
-                                        
-                                    }
-                                }.padding(.bottom, 5)
-                            }.frame(height: 30)
-                            
-                            Divider()
-                            
-                            TextField("Комментарий к заказу", text: $mainObject.commentOrder, onEditingChanged: { editing in
-                                self.isEditingText = editing
-                            })
-                            .navigationBarTitleDisplayMode(.inline)
-                            .onSubmit {
-                                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                            } label: {
+                                Text(buttonTitle)
+                                    .foregroundColor(.white)
+                                    .font(.system(size: 20))
+                                    .bold()
                             }
-                            .onChange(of: mainObject.commentOrder) { newValue in
-                                print(mainObject.commentOrder)
-                               
-                            }
-                            
-                            
+                            .frame(height: 50)
+                            .padding(.leading, 20)
+                            .padding(.trailing, 20)
+                            .background(buttonHighlight && isNewOrder ? Color.green : Color(UIColor(red: 248/255, green: 102/255, blue: 6/255, alpha: 1)))
+                            .clipShape(Capsule())
+                            .disabled(isButtonTap)
                         }
+                            
                     }
                     
                     
-                }.transition(.scale)
-                    .scrollContentBackground(.hidden)
-                
-                
+                }
                 
                 
             }
@@ -270,6 +334,8 @@ struct CartView: View {
                     keyboardHeight = 0
                 }
             }
+            
+            
         }
     }
     
