@@ -86,7 +86,7 @@ struct LiveLiveActivity: Widget {
                         Image(context.state.imageOne)
                             .resizable()
                             .colorMultiply(Color(UIColor(red: 248/255, green: 102/255, blue: 6/255, alpha: 1)))
-                            .frame(width: 20, height: 20)
+                            .frame(width: 30, height: 20)
                     }
                     if context.state.message.first == "2" {
                         Image(context.state.imageTwo)
@@ -122,7 +122,54 @@ struct LiveLiveActivity: Widget {
                 Rectangle()
                     .cornerRadius(23)
                     .foregroundStyle(.black)
-                    .frame(height: 100)
+                    .frame(height: 138)
+                
+                HStack {
+                    
+                    if context.state.message.first == "1" || context.state.message == "Начинаем готовить Ваш заказ..." {
+                        Image(context.state.imageOne)
+                            .resizable()
+                            .frame(width: 60, height: 40)
+                            .padding(.bottom, 65)
+                            .padding(.leading, 5)
+                    }
+                    
+                    if context.state.message.first == "2" {
+                        Image(context.state.imageTwo)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 60, height: 40)
+                            .padding(.bottom, 65)
+                            .padding(.leading, 5)
+                            
+                    }
+                    
+                    if context.state.message.first == "3" {
+                        Image(context.state.imageThree)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 60, height: 40)
+                            .padding(.bottom, 65)
+                            .padding(.leading, 5)
+                    }
+                    
+                    Spacer()
+                    Link(destination: URL(string: "tel://+79380312109")!) {
+                        Image(systemName: "phone")
+                            .resizable()
+                            .frame(width: 25, height: 25)
+                            .foregroundStyle(.white)
+                    }
+                    .frame(width: 45, height: 45)
+                    .background(Color(UIColor(red: 248/255, green: 102/255, blue: 6/255, alpha: 1)))
+                    .clipShape(.circle)
+                    .padding(.bottom, 65)
+                    .padding(.trailing, 1)
+                }
+                    .padding(.trailing, 12)
+                    .padding(.leading, 12)
+                
+                
 
                 HStack {
                     
@@ -147,8 +194,10 @@ struct LiveLiveActivity: Widget {
                         .opacity(context.state.wasThirdStepCompleted ? (context.state.isHighlighted ? 1 : 1) : 1)
                         .cornerRadius(3)
                     Spacer()
+                    
+                    
                 }
-                .padding(.top, -25)
+                .padding(.top, 10)
                 .padding(.trailing, 12)
                 .padding(.leading, 12)
                 
@@ -162,9 +211,10 @@ struct LiveLiveActivity: Widget {
                         .multilineTextAlignment(.leading)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.leading, 5)
-                }).padding(.top, 15)
+                }).padding(.top, 70)
                     .padding(.trailing, 15)
                     .padding(.leading, 15)
+                    .padding(.bottom, 5)
 
                 
                 
