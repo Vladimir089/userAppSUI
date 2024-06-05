@@ -81,6 +81,7 @@ struct LiveLiveActivity: Widget {
                 }
                 
             } compactLeading: {
+
                 VStack(alignment: .center, content: {
                     if context.state.message.first == "1" || context.state.message == "Начинаем готовить Ваш заказ..." {
                         Image(context.state.imageOne)
@@ -126,32 +127,15 @@ struct LiveLiveActivity: Widget {
                 
                 HStack {
                     
-                    if context.state.message.first == "1" || context.state.message == "Начинаем готовить Ваш заказ..." {
-                        Image(context.state.imageOne)
-                            .resizable()
-                            .frame(width: 60, height: 40)
-                            .padding(.bottom, 65)
-                            .padding(.leading, 5)
-                    }
+                    //format(for: context)
+                    Text(Date(timeIntervalSinceNow: Double(context.state.date.timeIntervalSince(Date())) - Double(Date().timeIntervalSince(Date() - 1))
+                             ),
+                         style: .timer)
+                    .foregroundStyle(.white)
                     
-                    if context.state.message.first == "2" {
-                        Image(context.state.imageTwo)
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 60, height: 40)
-                            .padding(.bottom, 65)
-                            .padding(.leading, 5)
-                            
-                    }
-                    
-                    if context.state.message.first == "3" {
-                        Image(context.state.imageThree)
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 60, height: 40)
-                            .padding(.bottom, 65)
-                            .padding(.leading, 5)
-                    }
+                    .font(.system(size: 36, weight: .semibold))
+                    .padding(.leading,5)
+                    .padding(.bottom, 65)
                     
                     Spacer()
                     Link(destination: URL(string: "tel://+79380312109")!) {
@@ -224,6 +208,7 @@ struct LiveLiveActivity: Widget {
 
     }
     
+  
 }
 
 

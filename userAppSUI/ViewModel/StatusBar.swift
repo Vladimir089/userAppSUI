@@ -184,7 +184,7 @@ class checkStatus: ObservableObject {
             .padding(.bottom, 40)
         }
         .opacity(isHidden ? 0 : 1)
-        .onChange(of: time) { oldValue, newValue in
+        .onChange(of: orderID["message"] as! String) { oldValue, newValue in
             self.updateLivActivity()
         }
     }
@@ -195,7 +195,7 @@ class checkStatus: ObservableObject {
         let mod = Dost(id: orderID["orderId"] as! Int)
         
         // Создаём начальное состояние со значением типа Dost.ContentState
-        let initialContentState = ActivityContent(state: Dost.ContentState(id: orderID["orderId"] as! Int, isHighlighted: isHighlighted, time: time, message: orderID["message"] as! String, wasFirstStepCompleted: wasFirstStepCompleted, wasSecondStepCompleted: wasSecondStepCompleted, wasThirdStepCompleted: wasThirdStepCompleted, imageOne: "cook", imageTwo: "car", imageThree: "finish"), staleDate: nil)
+        let initialContentState = ActivityContent(state: Dost.ContentState(id: orderID["orderId"] as! Int, isHighlighted: isHighlighted, time: time, message: orderID["message"] as! String, wasFirstStepCompleted: wasFirstStepCompleted, wasSecondStepCompleted: wasSecondStepCompleted, wasThirdStepCompleted: wasThirdStepCompleted, imageOne: "cook", imageTwo: "car", imageThree: "finish", date: (orderID["date"] as? Date)!), staleDate: nil)
         
         do {
             _ = try Activity<Dost>.request(attributes: mod, content: initialContentState)
@@ -214,7 +214,7 @@ class checkStatus: ObservableObject {
     
     func updateLivActivity() {
         if let activity = Activity<Dost>.activities.last {
-            let mod: Dost.ContentState = .init(id: orderID["orderId"] as! Int, isHighlighted: isHighlighted, time: time, message: orderID["message"] as! String, wasFirstStepCompleted: wasFirstStepCompleted, wasSecondStepCompleted: wasSecondStepCompleted, wasThirdStepCompleted: wasThirdStepCompleted, imageOne: "cook", imageTwo: "car", imageThree: "finish")
+            let mod: Dost.ContentState = .init(id: orderID["orderId"] as! Int, isHighlighted: isHighlighted, time: time, message: orderID["message"] as! String, wasFirstStepCompleted: wasFirstStepCompleted, wasSecondStepCompleted: wasSecondStepCompleted, wasThirdStepCompleted: wasThirdStepCompleted, imageOne: "cook", imageTwo: "car", imageThree: "finish", date: (orderID["date"] as? Date)!)
             
             Task {
                 await activity.update(
