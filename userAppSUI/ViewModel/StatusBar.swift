@@ -13,7 +13,7 @@ import ActivityKit
 
 class checkStatus: ObservableObject {
     @Published var isHidden = false
-    private var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    private var timer = Timer.publish(every: 30, on: .main, in: .common).autoconnect()
     private var timerTime = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     private var cancellable: AnyCancellable?
     private var cancellableTime: AnyCancellable?
@@ -25,6 +25,7 @@ class checkStatus: ObservableObject {
     @Published var wasThirdStepCompleted = false
     @Published var isHighlighted = false
     @Published var isUser = false
+    @Published var step = 1
     
     
     
@@ -41,12 +42,21 @@ class checkStatus: ObservableObject {
             return
         }
         cancellable = timer.sink { _ in
+            print(123)
             if let orderId = orderID["orderId"] as? Int {
+                print(123)
                 self.getStatusOrder(orderId: orderId){
-                    if orderID["message"] as! String == "Заказ завершен" || orderID["message"] as! String == "Заказ выполнен" {
-                        self.isHidden = true
-                        UserDefaults.standard.removeObject(forKey: "idd")
-                        self.removeLiveActivity()
+                    print(324234)
+                    if let orderMessage = orderID["message"] as? String {
+                        print("Received order message: \(orderMessage)")
+
+                        if orderMessage == "Заказ завершен" || orderMessage == "Заказ выполнен" || orderMessage == "Заказ отменен" {
+                            self.isHidden = true
+                            print(self.status)
+                            UserDefaults.standard.removeObject(forKey: "idd")
+                            self.removeLiveActivity()
+                            print(1243234)
+                        }
                     }
                     
                 }
@@ -72,12 +82,11 @@ class checkStatus: ObservableObject {
         cancellable = timer.sink { _ in
             if let orderId = orderID["orderId"] as? Int {
                 self.getStatusOrder(orderId: orderId){
-                    if orderID["message"] as! String == "Заказ завершен" || orderID["message"] as! String == "Заказ выполнен" {
+                    if orderID["message"] as? String == "Заказ завершен" || orderID["message"] as? String == "Заказ выполнен" {
                         self.isHidden = true
                         UserDefaults.standard.removeObject(forKey: "idd")
                         self.removeLiveActivity()
                     }
-                    
                 }
                 
                 
@@ -195,7 +204,7 @@ class checkStatus: ObservableObject {
         let mod = Dost(id: orderID["orderId"] as! Int)
         
         // Создаём начальное состояние со значением типа Dost.ContentState
-        let initialContentState = ActivityContent(state: Dost.ContentState(id: orderID["orderId"] as! Int, isHighlighted: isHighlighted, time: time, message: orderID["message"] as! String, wasFirstStepCompleted: wasFirstStepCompleted, wasSecondStepCompleted: wasSecondStepCompleted, wasThirdStepCompleted: wasThirdStepCompleted, imageOne: "cook", imageTwo: "car", imageThree: "finish", date: (orderID["date"] as? Date)!), staleDate: nil)
+        let initialContentState = ActivityContent(state: Dost.ContentState(id: orderID["orderId"] as! Int, isHighlighted: isHighlighted, time: time, message: orderID["message"] as! String, wasFirstStepCompleted: wasFirstStepCompleted, wasSecondStepCompleted: wasSecondStepCompleted, wasThirdStepCompleted: wasThirdStepCompleted, imageOne: "cook", imageTwo: "car", imageThree: "finish", date: (orderID["date"] as? Date)!, step: orderID["step"] as! Int), staleDate: nil)
         
         do {
             _ = try Activity<Dost>.request(attributes: mod, content: initialContentState)
@@ -214,7 +223,7 @@ class checkStatus: ObservableObject {
     
     func updateLivActivity() {
         if let activity = Activity<Dost>.activities.last {
-            let mod: Dost.ContentState = .init(id: orderID["orderId"] as! Int, isHighlighted: isHighlighted, time: time, message: orderID["message"] as! String, wasFirstStepCompleted: wasFirstStepCompleted, wasSecondStepCompleted: wasSecondStepCompleted, wasThirdStepCompleted: wasThirdStepCompleted, imageOne: "cook", imageTwo: "car", imageThree: "finish", date: (orderID["date"] as? Date)!)
+            let mod: Dost.ContentState = .init(id: orderID["orderId"] as! Int, isHighlighted: isHighlighted, time: time, message: orderID["message"] as! String, wasFirstStepCompleted: wasFirstStepCompleted, wasSecondStepCompleted: wasSecondStepCompleted, wasThirdStepCompleted: wasThirdStepCompleted, imageOne: "cook", imageTwo: "car", imageThree: "finish", date: (orderID["date"] as? Date)!, step: orderID["step"] as! Int)
             
             Task {
                 await activity.update(
@@ -225,36 +234,64 @@ class checkStatus: ObservableObject {
     }
     
     
+
+
     func getStatusOrder(orderId: Int, completion: @escaping () -> Void) {
         let headers: HTTPHeaders = [
-            HTTPHeader.authorization(bearerToken: token)]
+            HTTPHeader.authorization(bearerToken: token)
+        ]
         
-        AF.request("http://arbamarket.ru/api/v1/main/get_status_by_order_id/?order_id=\(orderId)&cafe_id=\(cafeID)", method: .get, headers: headers).responseJSON { response in
+        AF.request("http://arbamarket.ru/api/v1/delivery/update_status_order/?order_id=\(orderId)&cafe_id=\(cafeID)", method: .post, headers: headers).responseString { response in
+           
             switch response.result {
-            case .success(let data):
-                print("Успешный запрос, данные получены")
-                if let data = response.data, let stat = try? JSONDecoder().decode(getStatusToOrderStruct.self, from: data) {
-                    if let statStatus = stat.status {
-                        orderID["message"] = statStatus
-                        self.status = orderID["message"] as! String
-
-                        if self.status.first == "1" || self.status == "Начинаем готовить Ваш заказ..." {
+            case .success(let string):
+                
+                if let data = response.data {
+                    // Печать данных перед декодированием
+                    do {
+                        
+                        // Декодируйте ответ в структуру
+                        let decoder = JSONDecoder()
+                        let stat = try decoder.decode(getStatusToOrderStruct.self, from: data)
+                        
+                        orderID["message"] = stat.order_status
+                        orderID["step"] = stat.step
+                        self.status = stat.order_status ?? ""
+                        self.step = stat.step ?? 0
+                        if self.step == 1 || self.status == "Начинаем готовить Ваш заказ..." {
                             self.wasFirstStepCompleted = true
-                        } else if self.status.first == "2" {
+                        } else if self.step == 2 {
                             self.wasFirstStepCompleted = true
                             self.wasSecondStepCompleted = true
-                        } else if self.status.first == "3" {
+                        } else if self.step == 3 {
                             self.wasFirstStepCompleted = true
                             self.wasSecondStepCompleted = true
                             self.wasThirdStepCompleted = true
                         }
+                        
+                        if orderID["message"] as! String == "Заказ завершен" || orderID["message"] as! String == "Заказ выполнен" || orderID["message"] as! String == "Заказ отменен" {
+                            self.isHidden = true
+                            print(self.status)
+                            self.cancellable?.cancel()
+                            self.cancellableTime?.cancel()
+                            UserDefaults.standard.removeObject(forKey: "idd")
+                            self.removeLiveActivity()
+                            
+                            print(1243234)
+                        }
+                    } catch {
+                        print("JSON Decode Error: \(error.localizedDescription)")
+                        
+                        if let dataString = String(data: data, encoding: .utf8) {
+                            print(dataString)
+                        }
                     }
                 }
-            case .failure(_):
-                print(2)
+            case .failure(let error):
+                print("Request failed with error: \(error.localizedDescription)")
             }
+            completion()
         }
-        completion()
     }
     
     
@@ -285,6 +322,8 @@ class checkStatus: ObservableObject {
 
 
 struct getStatusToOrderStruct: Codable {
-    let status: String?
-    let color: String?
+    let status: Int?
+    let order_status: String?
+    let order_color: String?
+    let step: Int?
 }

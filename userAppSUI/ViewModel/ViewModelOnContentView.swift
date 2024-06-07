@@ -13,7 +13,7 @@ import AlamofireImage
 
 let cafeID = 2
 let token  = "73d2b9b6a303857b5854479692b05bd01defb73fb86fc5350689de1b637b764859b8993cb6b66870b3bac0c933d4d273a2e9d7a1c8ba0eabc0e03d083171c095c3da671d85336cff9e0abe44324489c7188b6c91e74d8043fabaecf6b4df2b0ceeee4e9ba19887b6372e1c4f8e2fe55c2058ffdedd022af452d2dd9db698853a"
-var orderID = ["orderId": Int(), "date": Date(), "message": "Начинаем готовить Ваш заказ..."] as [String : Any]
+var orderID = ["orderId": Int(), "date": Date(), "message": "Начинаем готовить Ваш заказ...", "step": Int()] as [String : Any]
 
 
 class Networking: ObservableObject {
@@ -40,13 +40,14 @@ class Networking: ObservableObject {
         if UserDefaults.standard.object(forKey: "idd") != nil {
             let idKey = UserDefaults.standard.object(forKey: "idd")
             orderID = idKey as! [String : Any]
-            print(orderID, 32423)
         }
     }
     
     func getDishes(completion: @escaping(Error?)-> Void) {
+        
         let headers: HTTPHeaders = [.authorization(bearerToken: token)]
         AF.request("http://arbamarket.ru/api/v1/main/get_dishes/?cafe_id=\(cafeID)", method: .get, headers: headers).response { response in
+            debugPrint(response)
             debugPrint(response)
             switch response.result {
             case .success(_):
@@ -163,14 +164,13 @@ class Networking: ObservableObject {
         }
         
         AF.request("http://arbamarket.ru/api/v1/main/create_order/", method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
-            debugPrint(response)
             switch response.result {
             case .success(let data):
                 if let jsonData = data as? [String: Any] {
                     if let orderId = jsonData["order_id"] as? Int {
                         UserDefaults.standard.setValue(phonee, forKey: "number")
                         UserDefaults.standard.setValue(adres, forKey: "adres")
-                        orderID = ["orderId": orderId, "date": Date.now, "message": "Начинаем готовить Ваш заказ..."]
+                        orderID = ["orderId": orderId, "date": Date.now, "message": "Начинаем готовить Ваш заказ...", "step": 1]
                         UserDefaults.standard.setValue(orderID, forKey: "idd")
                         print(orderID)
                         completion(true)

@@ -18,14 +18,14 @@ struct LiveLiveActivity: Widget {
             DynamicIsland {
                 DynamicIslandExpandedRegion(.leading) {
                     
-                    if context.state.message.first == "1" || context.state.message == "Начинаем готовить Ваш заказ..." {
+                    if context.state.step == 1 || context.state.message == "Начинаем готовить Ваш заказ..." {
                         Image(context.state.imageOne)
                             .resizable()
                             .colorMultiply(Color(UIColor(red: 248/255, green: 102/255, blue: 6/255, alpha: 1)))
                             .frame(width: 40, height: 40)
                     }
                     
-                    if context.state.message.first == "2" {
+                    if context.state.step == 2 {
                         Image(context.state.imageTwo)
                             .resizable()
                             .colorMultiply(Color(UIColor(red: 248/255, green: 102/255, blue: 6/255, alpha: 1)))
@@ -34,7 +34,7 @@ struct LiveLiveActivity: Widget {
                             
                     }
                     
-                    if context.state.message.first == "3" {
+                    if context.state.step == 3 {
                         Image(context.state.imageThree)
                             .resizable()
                             .colorMultiply(Color(UIColor(red: 248/255, green: 102/255, blue: 6/255, alpha: 1)))
@@ -61,17 +61,17 @@ struct LiveLiveActivity: Widget {
                 DynamicIslandExpandedRegion(.center) {
                     VStack {
                         
-                        if context.state.message.first == "1" || context.state.message == "Начинаем готовить Ваш заказ..." {
+                        if context.state.step == 1 || context.state.message == "Начинаем готовить Ваш заказ..." {
                             Text("Готовим...")
                                 .font(.system(size: 20))
                                 .bold()
                         }
-                        if context.state.message.first == "2" {
+                        if context.state.step == 2 {
                             Text("Передаем курьеру")
                                 .font(.system(size: 16))
                                 .bold()
                         }
-                        if context.state.message.first == "3" {
+                        if context.state.step == 3 {
                             Text("Встречайте!")
                                 .font(.system(size: 16))
                                 .bold()
@@ -83,19 +83,19 @@ struct LiveLiveActivity: Widget {
             } compactLeading: {
 
                 VStack(alignment: .center, content: {
-                    if context.state.message.first == "1" || context.state.message == "Начинаем готовить Ваш заказ..." {
+                    if context.state.step == 1 || context.state.message == "Начинаем готовить Ваш заказ..." {
                         Image(context.state.imageOne)
                             .resizable()
                             .colorMultiply(Color(UIColor(red: 248/255, green: 102/255, blue: 6/255, alpha: 1)))
                             .frame(width: 30, height: 20)
                     }
-                    if context.state.message.first == "2" {
+                    if context.state.step == 2 {
                         Image(context.state.imageTwo)
                             .resizable()
                             .colorMultiply(Color(UIColor(red: 248/255, green: 102/255, blue: 6/255, alpha: 1)))
                             .frame(width: 20, height: 20)
                     }
-                    if context.state.message.first == "3" {
+                    if context.state.step == 3 {
                         Image(context.state.imageThree)
                             .resizable()
                             .colorMultiply(Color(UIColor(red: 248/255, green: 102/255, blue: 6/255, alpha: 1)))

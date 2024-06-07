@@ -38,6 +38,7 @@ struct Dost: ActivityAttributes{
         var imageTwo: String
         var imageThree: String
         var date: Date
+        var step: Int
     }
     var id: Int
    
