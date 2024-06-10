@@ -41,6 +41,11 @@ struct CollectionView: UIViewRepresentable {
     }
     
     
+    func triggerHapticFeedbackSoft() {
+        let generator = UIImpactFeedbackGenerator(style: .soft)  // Вы можете изменить стиль на .light, .medium или .heavy
+        generator.impactOccurred()
+    }
+    
     
     func makeCoordinator() -> Coordinator {
         Coordinator(self, selectedCategory: $selectedCategory, isButtonTapped: $isButtonTapped)
@@ -67,6 +72,11 @@ struct CollectionView: UIViewRepresentable {
                     return 0 //В последней секции ноль элементов
                 }
             return parent.sections[section].1.count
+        }
+        
+        func triggerHapticFeedback() {
+            let generator = UIImpactFeedbackGenerator(style: .medium)  // Вы можете изменить стиль на .light, .medium или .heavy
+            generator.impactOccurred()
         }
         
         func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -129,6 +139,7 @@ struct CollectionView: UIViewRepresentable {
                 button.tintColor = .white
                 button.backgroundColor = .systemGreen
             }
+            triggerHapticFeedback()
             DispatchQueue.main.asyncAfter(wallDeadline: .now() + 0.4) {
                 UIView.animate(withDuration: 0.4) {
                     button.tintColor = originalColorToText
@@ -152,13 +163,19 @@ struct CollectionView: UIViewRepresentable {
         
         func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
             if parent.isButtonTapped == false {
-                print(isButtonTapped)
                 let visibleSections = collectionView.indexPathsForVisibleItems.map { $0.section }
                 if let firstVisibleSection = visibleSections.first {
                     let category = parent.sections[firstVisibleSection].0
+                    triggerHapticFeedbackSoft()
+                    print(12)
                     NotificationCenter.default.post(name: .updateScrolledCategory, object: category)
                 }
             }
+        }
+        
+        func triggerHapticFeedbackSoft() {
+            let generator = UIImpactFeedbackGenerator(style: .soft)  // Вы можете изменить стиль на .light, .medium или .heavy
+            generator.impactOccurred()
         }
         
         func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
@@ -251,11 +268,16 @@ class DetailViewController: UIViewController {
         })
        
     }
+    
+    func triggerHapticFeedback() {
+        let generator = UIImpactFeedbackGenerator(style: .medium)  // Вы можете изменить стиль на .light, .medium или .heavy
+        generator.impactOccurred()
+    }
 
     @objc func addButtonPressed(_ sender: UIButton) {
         let originalColor = sender.backgroundColor
         let originalColorToText = sender.tintColor
-        
+        triggerHapticFeedback()
         UIView.animate(withDuration: 0.4) {
             sender.tintColor = .white
             sender.backgroundColor = .systemGreen

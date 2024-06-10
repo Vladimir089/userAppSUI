@@ -16,6 +16,7 @@ struct CartView: View {
     @State  var buttonHighlight = false
     @State  var buttonTitle = "Оформить заказ \(totalCoast) ₽"
     @State private var isButtonTap = false
+    @Environment(\.presentationMode) var presentationMode
     
     
     private let phoneFormatter = PhoneNumberFormatter()
@@ -36,9 +37,10 @@ struct CartView: View {
                 SegmentedPicker(selectedSegment: $selectedSegment, segments: ["Доставка", "Самовывоз"])
                     .padding(.horizontal)
                     .frame(height: 44)
+                    .onChange(of: selectedSegment) { oldValue, newValue in
+                        triggerHapticFeedback()
+                    }
                 ZStack {
-                    
-                    
                     Form {
                         Section {
                             ScrollView {
@@ -73,6 +75,7 @@ struct CartView: View {
                                                     .padding(.top, 5)
                                                 HStack(alignment: .center) {
                                                     Button(action: {
+                                                        triggerHapticFeedback()
                                                         if item.quantity != 0 {
                                                             item.quantity -= 1
                                                             modelView.getTotalCoast(adress: "df", order: order) {
@@ -102,6 +105,7 @@ struct CartView: View {
                                                         .padding(.horizontal, 4)
                                                     
                                                     Button(action: {
+                                                        triggerHapticFeedback()
                                                         if item.quantity != 10 {
                                                             item.quantity += 1
                                                             modelView.getTotalCoast(adress: "df", order: order) {
@@ -212,6 +216,7 @@ struct CartView: View {
                                                 .onTapGesture {
                                                     if mainObject.pribor != 1 {
                                                         mainObject.pribor -= 1
+                                                        triggerHapticFeedback()
                                                     }
                                                 }
                                                 .padding(.top, 3.5)
@@ -228,6 +233,7 @@ struct CartView: View {
                                                 .onTapGesture {
                                                     if mainObject.pribor != 10 {
                                                         mainObject.pribor += 1
+                                                        triggerHapticFeedback()
                                                     }
                                                 }
                                             
@@ -276,6 +282,8 @@ struct CartView: View {
                                             buttonHighlight = true
                                             buttonTitle = "Заказ оформлен"
                                         }
+                                        triggerHapticFeedback()
+                                        self.presentationMode.wrappedValue.dismiss()
                                         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                                             withAnimation {
                                                 statusBard.start()
@@ -286,11 +294,13 @@ struct CartView: View {
                                         }
                                        
                                     } else {
+                                        triggerHapticFeedbackFall()
                                         withAnimation {
                                             isNewOrder = false
                                             buttonHighlight = false
                                             buttonTitle = "Заказ не создан"
                                         }
+                                       
                                         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                                             withAnimation {
                                                 isButtonTap = false
@@ -339,8 +349,18 @@ struct CartView: View {
         }
     }
     
+    func triggerHapticFeedbackFall() {
+        let generator = UIImpactFeedbackGenerator(style: .heavy)  // Вы можете изменить стиль на .light, .medium или .heavy
+        generator.impactOccurred()
+    }
+    
     func hideKeyboard() {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+    
+    func triggerHapticFeedback() {
+        let generator = UIImpactFeedbackGenerator(style: .light)  // Вы можете изменить стиль на .light, .medium или .heavy
+        generator.impactOccurred()
     }
     
     func productWordDeclension(count: Int) -> String {

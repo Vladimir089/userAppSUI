@@ -254,29 +254,31 @@ class checkStatus: ObservableObject {
                         let decoder = JSONDecoder()
                         let stat = try decoder.decode(getStatusToOrderStruct.self, from: data)
                         
-                        orderID["message"] = stat.order_status
                         orderID["step"] = stat.step
                         self.status = stat.order_status ?? ""
                         self.step = stat.step ?? 0
+                        print(self.step, 2222)
                         if self.step == 1 || self.status == "Начинаем готовить Ваш заказ..." {
                             self.wasFirstStepCompleted = true
+                            orderID["message"] = "Начинаем готовить Ваш заказ..."
                         } else if self.step == 2 {
                             self.wasFirstStepCompleted = true
                             self.wasSecondStepCompleted = true
+                            orderID["message"] = "Передаем заказ курьеру..."
                         } else if self.step == 3 {
                             self.wasFirstStepCompleted = true
                             self.wasSecondStepCompleted = true
                             self.wasThirdStepCompleted = true
+                            orderID["message"] = "Встречайте ~ 5 минут марка"
                         }
                         
-                        if orderID["message"] as! String == "Заказ завершен" || orderID["message"] as! String == "Заказ выполнен" || orderID["message"] as! String == "Заказ отменен" {
+                        if  stat.order_status == "Заказ завершен" ||  stat.order_status == "Заказ выполнен" ||  stat.order_status == "Заказ отменен" {
                             self.isHidden = true
                             print(self.status)
                             self.cancellable?.cancel()
                             self.cancellableTime?.cancel()
                             UserDefaults.standard.removeObject(forKey: "idd")
                             self.removeLiveActivity()
-                            
                             print(1243234)
                         }
                     } catch {

@@ -37,6 +37,7 @@ struct DostView: View {
                         }
                     )
                     .onChange(of: adr) { newValue in
+                        print(1)
                         model.getAdress(adres: newValue) { fullAddresses in
                             adressArr = fullAddresses
                         }
@@ -67,6 +68,7 @@ struct DostView: View {
                         .onTapGesture {
                             model.adress = adressArr[i]  // Обновляем выбранный адрес при нажатии на ячейку
                             adr = model.adress
+                            self.presentationMode.wrappedValue.dismiss()
                         }
                 }
             }.scrollContentBackground(.hidden)
@@ -79,6 +81,8 @@ struct DostView: View {
             }
         }
     }
+    
+   
 }
 
 #Preview {

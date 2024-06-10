@@ -29,6 +29,7 @@ struct ContentView: View {
                                             self.isButtonTapped = false
                                         }
                                     }
+                                    triggerHapticFeedback()
                                 }) {
                                     Text(category)
                                         .font(.system(size: 17))
@@ -68,7 +69,7 @@ struct ContentView: View {
                                 Spacer()
                                 Button(action: {
                                     showingCart = true
-                                    
+                                    triggerHapticFeedback()
                                 }) {
                                     
                                     //let sum = order.orderArr.reduce(into: 0) { $0 += ($1.price * $1.quantity) }
@@ -154,6 +155,11 @@ struct ContentView: View {
             sum += i.quantity * i.price
         }
         return sum
+    }
+    
+    func triggerHapticFeedback() {
+        let generator = UIImpactFeedbackGenerator(style: .medium)  //.light, .medium или .heavy
+        generator.impactOccurred()
     }
 }
 
