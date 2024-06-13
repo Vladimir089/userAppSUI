@@ -22,6 +22,7 @@ struct CollectionView: UIViewRepresentable {
         layout.scrollDirection = .vertical
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         layout.minimumLineSpacing = 30
+        collectionView.backgroundColor = .white
         layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 30, right: 0)  // Устанавливает отступы для каждой сек
         collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "Cell")
         collectionView.showsVerticalScrollIndicator = false
@@ -214,6 +215,7 @@ class DetailViewController: UIViewController {
         dishImageView.image = dish.1
         nameLabel.text = dish.0.name
         nameLabel.font = .systemFont(ofSize: 27, weight: .bold)
+        nameLabel.textColor = .black
         nameLabel.numberOfLines = 0
         nameLabel.textAlignment = .left
         hideView.backgroundColor = UIColor(red: 229/255, green: 229/255, blue: 230/255, alpha: 1)
@@ -291,13 +293,13 @@ class DetailViewController: UIViewController {
         
         if let existingIndex =  order.orderArr.firstIndex(where: { $0.name == dish.0.name }) {
             order.orderArr[existingIndex].quantity += 1
-            order.orderArr[existingIndex].price += dish.0.price
+            //order.orderArr[existingIndex].price += 1
         } else {
             let orderS = OrderItem(name: dish.0.name, quantity: 1, image: dish.1, price: dish.0.price)
            
             order.orderArr.append((orderS))
-            self.dismiss(animated: true, completion: nil)
         }
+        self.dismiss(animated: true, completion: nil)
     }
 }
 

@@ -134,7 +134,8 @@ struct ContentView: View {
                     print(netWorking.allDishes)
                 }
             }
-            
+            //.foregroundStyle(Color.white)
+            .background(Color.white)
            
         }
         .onAppear {
@@ -147,6 +148,7 @@ struct ContentView: View {
             
             
         }
+        
         
     }
     func checkSumm() -> Int {

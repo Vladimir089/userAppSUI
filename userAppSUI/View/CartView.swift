@@ -59,6 +59,7 @@ struct CartView: View {
                                                     .lineLimit(2)
                                                     .lineSpacing(-2)
                                                     .padding(.bottom, -5)
+                                                    .foregroundStyle(Color.black)
                                                 
                                                 Spacer(minLength: 1)
                                                 Text("\(item.price * item.quantity) ₽")
@@ -103,6 +104,7 @@ struct CartView: View {
                                                     
                                                     Text("\(item.quantity)")
                                                         .padding(.horizontal, 4)
+                                                        .foregroundStyle(Color.black)
                                                     
                                                     Button(action: {
                                                         triggerHapticFeedback()
@@ -154,10 +156,12 @@ struct CartView: View {
                                 HStack {
                                     Text("Итого")
                                         .font(.system(size: 18))
+                                        .foregroundStyle(Color.black)
                                     Spacer()
                                     
                                     Text("\(totalCoast) тут цена ₽")
                                         .font(.system(size: 18))
+                                        .foregroundStyle(Color.black)
                                 }.padding(.top, 5)
                             }
                             
@@ -224,6 +228,7 @@ struct CartView: View {
                                             
                                             Text("\(mainObject.pribor)")
                                                 .padding(.top, 4)
+                                                .foregroundStyle(Color.black)
                                             
                                             Image(.plus) // Изображение для кнопки
                                                 .resizable()
@@ -265,6 +270,7 @@ struct CartView: View {
                         
                     }.transition(.scale)
                         .scrollContentBackground(.hidden)
+                        
                    
                     VStack {
                         Spacer()
