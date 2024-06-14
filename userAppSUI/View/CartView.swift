@@ -163,7 +163,7 @@ struct CartView: View {
                                         .font(.system(size: 18))
                                         .foregroundStyle(Color.black)
                                 }.padding(.top, 5)
-                            }
+                            }.padding(.bottom, 15)
                             
                             
                         }.transition(.scale)

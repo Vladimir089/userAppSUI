@@ -117,7 +117,7 @@ class Networking: ObservableObject {
     
     func getAdress(adres: String, completion: @escaping ([String]) -> Void) {
         let headers: HTTPHeaders = [.accept("application/json")]
-        AF.request("http://arbamarket.ru/api/v1/main/get_similar_addresses/?value=\(adres)", method: .get, headers: headers).responseJSON { response in
+        AF.request("http://arbamarket.ru/api/v1/main/get_similar_addresses/?cafe_id=\(cafeID)&value=\(adres)", method: .get, headers: headers).responseJSON { response in
             debugPrint(response)
             switch response.result {
             case .success(let value):
