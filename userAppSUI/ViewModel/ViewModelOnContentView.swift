@@ -16,6 +16,8 @@ let token  = "73d2b9b6a303857b5854479692b05bd01defb73fb86fc5350689de1b637b764859
 var orderID = ["orderId": Int(), "date": Date(), "message": "Начинаем готовить Ваш заказ...", "step": Int()] as [String : Any]
 
 
+
+
 class Networking: ObservableObject {
     
     
@@ -28,7 +30,8 @@ class Networking: ObservableObject {
     @Published var commentOrder = ""
     @Published var summ = 0
     @Published var phoneNumber = ""
-    //@Published var orderID = ["orderId": 0, "date": Date.now, "message": "Начинаем готовить Ваш заказ..."]
+    @Published var totalCoast = 0
+    @Published var adressCoast = 0
     
     func checkuser() {
         if let phoneKey = UserDefaults.standard.string(forKey: "number")  {
@@ -134,6 +137,68 @@ class Networking: ObservableObject {
         }
     }
     
+    func adressCost(adres: String) {
+        let headers: HTTPHeaders = [.accept("application/json")]
+        let adresText: String = adress ?? ""
+        AF.request("http://arbamarket.ru/api/v1/main/get_total_cost/?cafe_id=\(cafeID)&menu=\(0)&address=\(String(describing: adresText))", method: .get, headers: headers).responseJSON { response in
+            debugPrint(response)
+            switch response.result {
+            case .success(let value):
+                if let json = value as? [String: Any] {
+                    if let totalCost = json["total_cost"] as? Int,
+                       let addressCost = json["address_cost"] as? Int {
+                        self.adressCoast = addressCost
+                        self.totalCoast += self.adressCoast
+                    }
+                } else {
+                    print("Invalid JSON format")
+                }
+
+            case .failure(let error):
+                print("Request failed with error:", error)
+            }
+        }
+    }
+    
+    
+    func getTotalCoast(adress: String?, order: Order, completion: @escaping () -> Void) {
+        let headers: HTTPHeaders = [.accept("application/json")]
+
+        // Преобразовываем каждый OrderItem в строку в формате "name-quantity"
+        let menuStrings = order.orderArr.map { item in
+            return "\(item.name) - \(item.quantity)"
+        }
+
+        
+        let menu = menuStrings.joined(separator: ", ")
+       
+        let adresText: String = adress ?? ""
+        AF.request("http://arbamarket.ru/api/v1/main/get_total_cost/?cafe_id=\(cafeID)&menu=\(menu)&address=\(String(describing: adresText))", method: .get, headers: headers).responseJSON { response in
+            debugPrint(response)
+            print(menu)
+            switch response.result {
+            case .success(let value):
+                if let json = value as? [String: Any] {
+                    if let totalCost = json["total_cost"] as? Int,
+                       let addressCost = json["address_cost"] as? Int {
+                        self.totalCoast = totalCost
+                        self.adressCoast = addressCost
+                        
+                        print(self.adressCoast)
+                        print(self.totalCoast)
+                    }
+                } else {
+                    print("Invalid JSON format")
+                }
+
+            case .failure(let error):
+                print("Request failed with error:", error)
+            }
+            completion()
+        }
+    }
+    
+    
     func createNewOrder(phonee: String, menuItems: String, clientsNumber: Int, adres: String, totalCost: Int, paymentMethod: String, timeOrder: String, cafeID: Int, completion: @escaping (Bool) -> Void) {
         let headers: HTTPHeaders = [
             HTTPHeader.accept("application/json"),
@@ -165,6 +230,7 @@ class Networking: ObservableObject {
         }
         
         AF.request("http://arbamarket.ru/api/v1/main/create_order/", method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+            
             switch response.result {
             case .success(let data):
                 if let jsonData = data as? [String: Any] {

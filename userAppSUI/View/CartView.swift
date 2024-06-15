@@ -1,6 +1,8 @@
 import SwiftUI
 
 
+
+
 struct CartView: View {
     
     @State private var keyboardHeight: CGFloat = 0
@@ -14,15 +16,16 @@ struct CartView: View {
     @State  var isEditingText = false
     @State  var isNewOrder = true
     @State  var buttonHighlight = false
-    @State  var buttonTitle = "Оформить заказ \(totalCoast) ₽"
+    @State var buttonTitle = ""
     @State private var isButtonTap = false
     @Environment(\.presentationMode) var presentationMode
     
     
     private let phoneFormatter = PhoneNumberFormatter()
     
-    @StateObject var modelView = CartModelView()
+
     @StateObject var statusBard: checkStatus
+    
     
     
     
@@ -77,18 +80,21 @@ struct CartView: View {
                                                 HStack(alignment: .center) {
                                                     Button(action: {
                                                         triggerHapticFeedback()
-                                                        if item.quantity != 0 {
+                                                        if item.quantity > 0 {
                                                             item.quantity -= 1
-                                                            modelView.getTotalCoast(adress: "df", order: order) {
-                                                                print("good")
+                                                            mainObject.getTotalCoast(adress: mainObject.adress, order: order) {
+                                                                buttonTitle = "Оформить заказ \(mainObject.totalCoast) ₽"
                                                             }
-                                                        }
-                                                        if item.quantity == 0 {
-                                                            if let index = order.orderArr.firstIndex(where: { $0.id == item.id }) {
-                                                                withAnimation(.easeInOut(duration: 0.5)) {
-                                                                    order.orderArr.remove(at: index)
-                                                                    modelView.getTotalCoast(adress: "df", order: order) {
-                                                                        print("good")
+                                                            
+                                                            if item.quantity == 0 {
+                                                                // Проверяем, что индекс существует в массиве перед удалением
+                                                                if let index = order.orderArr.firstIndex(where: { $0.id == item.id }) {
+                                                                    withAnimation(.easeInOut(duration: 0.5)) {
+                                                                        order.orderArr.remove(at: index)
+                                                                        // Пересчитываем общую стоимость после удаления элемента
+                                                                        mainObject.getTotalCoast(adress: mainObject.adress, order: order) {
+                                                                            buttonTitle = "Оформить заказ \(mainObject.totalCoast) ₽"
+                                                                        }
                                                                     }
                                                                 }
                                                             }
@@ -110,9 +116,10 @@ struct CartView: View {
                                                         triggerHapticFeedback()
                                                         if item.quantity != 10 {
                                                             item.quantity += 1
-                                                            modelView.getTotalCoast(adress: "df", order: order) {
-                                                                print("good")
+                                                            mainObject.getTotalCoast(adress: mainObject.adress, order: order) {
+                                                                buttonTitle = "Оформить заказ \(mainObject.totalCoast) ₽"
                                                             }
+                                                            
                                                         }
                                                     }) {
                                                         Image(.plus)
@@ -134,7 +141,7 @@ struct CartView: View {
                                         .font(.system(size: 18))
                                         .foregroundStyle(Color(UIColor(red: 126/255, green: 126/255, blue: 126/255, alpha: 1)))
                                     Spacer()
-                                    Text("\(checkSumm() + adressCoast) ₽")
+                                    Text("\(checkSumm()) ₽")
                                         .font(.system(size: 18))
                                         .foregroundStyle(Color(UIColor(red: 126/255, green: 126/255, blue: 126/255, alpha: 1)))
                                 }.padding(.bottom, 5)
@@ -147,9 +154,12 @@ struct CartView: View {
                                         .font(.system(size: 18))
                                         .foregroundStyle(Color(UIColor(red: 126/255, green: 126/255, blue: 126/255, alpha: 1)))
                                     Spacer()
-                                    Text("\(adressCoast) тут цена ₽")
+                                    Text("\(mainObject.adressCoast) ₽")
                                         .font(.system(size: 18))
                                         .foregroundStyle(Color(UIColor(red: 126/255, green: 126/255, blue: 126/255, alpha: 1)))
+                                        .onChange(of: mainObject.adress) { oldValue, newValue in
+                                            buttonTitle = "Оформить заказ \(mainObject.totalCoast) ₽"
+                                        }
                                 }.padding(.bottom, 5)
                                 
                                 Divider()
@@ -159,14 +169,19 @@ struct CartView: View {
                                         .foregroundStyle(Color.black)
                                     Spacer()
                                     
-                                    Text("\(totalCoast) тут цена ₽")
+                                    Text("\(mainObject.totalCoast) ₽")
                                         .font(.system(size: 18))
                                         .foregroundStyle(Color.black)
+                                        .onChange(of: mainObject.totalCoast) { oldValue, newValue in
+                                            buttonTitle = "Оформить заказ \(mainObject.totalCoast) ₽"
+                                        }
                                 }.padding(.top, 5)
-                            }.padding(.bottom, 15)
+                            }
+
                             
                             
                         }.transition(.scale)
+                        
                         
                         Section {
                             VStack {
@@ -188,7 +203,7 @@ struct CartView: View {
                                 
                                 
                                 NavigationLink(
-                                    destination: DostView(model: mainObject, modelDost: modelView)) {
+                                    destination: DostView(model: mainObject)) {
                                         if mainObject.adress.isEmpty {
                                             Text("Адрес доставки")
                                                 .foregroundStyle(.black)
@@ -265,12 +280,15 @@ struct CartView: View {
                                 
                                 
                             }
+                            
                         }
+                        
                         
                         
                     }.transition(.scale)
                         .scrollContentBackground(.hidden)
                         
+                    
                    
                     VStack {
                         Spacer()
@@ -281,7 +299,7 @@ struct CartView: View {
                                 }
                                 let menu = menuStrings.joined(separator: ", ")
                                 isButtonTap = true
-                                mainObject.createNewOrder(phonee: mainObject.phoneNumber, menuItems: menu, clientsNumber: mainObject.pribor, adres: mainObject.adress, totalCost: totalCoast, paymentMethod: "наличка", timeOrder: "", cafeID: cafeID) { success in
+                                mainObject.createNewOrder(phonee: mainObject.phoneNumber, menuItems: menu, clientsNumber: mainObject.pribor, adres: mainObject.adress, totalCost: mainObject.totalCoast, paymentMethod: "наличка", timeOrder: "", cafeID: cafeID) { success in
                                     if success {
                                         withAnimation {
                                             isNewOrder = true
@@ -295,7 +313,7 @@ struct CartView: View {
                                                 statusBard.start()
                                                 isButtonTap = false
                                                 buttonHighlight = false
-                                                buttonTitle = "Оформить заказ \(totalCoast) ₽"
+                                                buttonTitle = "Оформить заказ \(mainObject.totalCoast) ₽"
                                             }
                                         }
                                        
@@ -311,7 +329,7 @@ struct CartView: View {
                                             withAnimation {
                                                 isButtonTap = false
                                                 buttonHighlight = false
-                                                buttonTitle = "Оформить заказ \(totalCoast) ₽"
+                                                buttonTitle = "Оформить заказ \(mainObject.totalCoast) ₽"
                                             }
                                         }
                                         
@@ -329,6 +347,9 @@ struct CartView: View {
                             .background(buttonHighlight && isNewOrder ? Color.green : Color(UIColor(red: 248/255, green: 102/255, blue: 6/255, alpha: 1)))
                             .clipShape(Capsule())
                             .disabled(isButtonTap)
+                            .onAppear {
+                                buttonTitle = "Оформить заказ \(mainObject.totalCoast) ₽"
+                            }
                         }
                             
                     }
@@ -352,6 +373,10 @@ struct CartView: View {
             }
             
             
+        }.onAppear {
+            mainObject.getTotalCoast(adress: mainObject.adress, order: order) {
+                print("good")
+            }
         }
     }
     

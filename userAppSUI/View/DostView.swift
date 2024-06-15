@@ -1,11 +1,12 @@
 import SwiftUI
 
+
 struct DostView: View {
     @ObservedObject var model: Networking
     @Environment(\.presentationMode) var presentationMode
     @State var adressArr: [String] = []
     @State var adr = ""
-    @ObservedObject var modelDost: CartModelView
+
 
     
 
@@ -67,6 +68,7 @@ struct DostView: View {
                     Text(adressArr[i])
                         .onTapGesture {
                             model.adress = adressArr[i]  // Обновляем выбранный адрес при нажатии на ячейку
+                            model.adressCost(adres: adressArr[i])
                             adr = model.adress
                             self.presentationMode.wrappedValue.dismiss()
                         }
