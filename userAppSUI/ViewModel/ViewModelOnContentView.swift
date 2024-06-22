@@ -8,6 +8,7 @@
 import Foundation
 import Alamofire
 import AlamofireImage
+import Kingfisher
 
 
 
@@ -50,8 +51,7 @@ class Networking: ObservableObject {
         
         let headers: HTTPHeaders = [.authorization(bearerToken: token)]
         AF.request("http://arbamarket.ru/api/v1/main/get_dishes/?cafe_id=\(cafeID)", method: .get, headers: headers).response { response in
-            debugPrint(response)
-            debugPrint(response)
+            
             switch response.result {
             case .success(_):
                 if let status = response.response?.statusCode {
@@ -90,16 +90,20 @@ class Networking: ObservableObject {
             }
         }
     }
-    
+
+
     func getImage(d: Dish, completion: @escaping () -> Void) {
         if let url = d.img {
-            AF.request("http://arbamarket.ru\(url)").responseImage { response in
-               print("http://arbamarket.ru\(url)")
-                switch response.result {
-                case .success(let image):
-                    self.allDishes.append((d, image))
+            let imageURL = URL(string: "http://arbamarket.ru\(url)")
+            
+            KingfisherManager.shared.retrieveImage(with: imageURL!) { result in
+                switch result {
+                case .success(let value):
+                    let image = value.image
+                    self.allDishes.append((d, image)) // Добавляем кортеж с изображением
                 case .failure(_):
-                    self.allDishes.append((d, Image(resource: .standart)))
+                    let placeholderImage = Image(named: "standart")
+                    self.allDishes.append((d, placeholderImage!))
                 }
                 completion()
             }
@@ -107,6 +111,10 @@ class Networking: ObservableObject {
             completion()
         }
     }
+    
+    
+    
+    
     
    
     
