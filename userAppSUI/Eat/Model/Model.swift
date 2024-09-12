@@ -44,3 +44,18 @@ struct Dost: ActivityAttributes{
    
 }
 
+struct CafeInfo: Codable {
+    var name: String
+    var image: Data
+    var categories: [String]
+    var numberOrders: Int
+    var clients: Int
+    
+    init(name: String, image: Data, categories: [String], numberOrders: Int, clients: Int) {
+        self.name = name
+        self.image = image
+        self.categories = categories
+        self.numberOrders = numberOrders
+        self.clients = clients
+    }
+}

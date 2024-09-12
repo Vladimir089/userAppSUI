@@ -87,6 +87,6 @@ struct DostView: View {
    
 }
 
-#Preview {
-    ContentView()
-}
+//#Preview {
+//    ContentView()
+//}

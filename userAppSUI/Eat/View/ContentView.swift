@@ -2,19 +2,92 @@ import SwiftUI
 import SnapKit
 
 struct ContentView: View {
-    
-    @ObservedObject var netWorking = Networking()
+    @Binding var showSheetEat: Bool
+    @ObservedObject var netWorking: Networking
+    @ObservedObject var checkStatusModelView: checkStatus
     @State var selectedCategory = "РОЛЛЫ"
     @State var isButtonTapped = false
     @ObservedObject var order = Order()
     @State var showingCart = false
-    @ObservedObject var checkStatusModelView = checkStatus()
     
+
+    @State var token: String
+    @State var cafeID: Int
+
+    init(isShowingDetail: Binding<Bool>, token: String, cafeID: Int) {
+        self._showSheetEat = isShowingDetail
+        self.token = token
+        self.cafeID = cafeID
+        let netWorkingInstance = Networking()
+        netWorkingInstance.token = token
+        self.netWorking = netWorkingInstance
+        self.checkStatusModelView = checkStatus(mainModel: netWorkingInstance)
+        
+    }
     
     
     var body: some View {
         NavigationView {
             VStack {
+                
+                HStack {
+                    Image(uiImage: UIImage(data: netWorking.cafe.image) ?? UIImage())
+                        .resizable()
+                        .clipShape(.buttonBorder)
+                        .frame(width: 60, height: 60)
+                    //Spacer()
+                    
+                    VStack {
+                        Spacer()
+                        Text(netWorking.cafe.name)
+                            .foregroundStyle(.black)
+                            .font(.system(size: 17, weight: .semibold))
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        Spacer()
+                        
+                        Text(netWorking.cafe.categories.joined(separator: ", "))
+                            .foregroundStyle(Color(UIColor(red: 156/255, green: 156/255, blue: 156/255, alpha: 1)))
+                            .font(.system(size: 12, weight: .regular))
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        
+                        
+                        Text("\(netWorking.cafe.numberOrders) Заказов")
+                            .foregroundStyle(Color(UIColor(red: 156/255, green: 156/255, blue: 156/255, alpha: 1)))
+                            .font(.system(size: 12, weight: .regular))
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        Spacer()
+                    }
+                    
+                    Spacer()
+                    
+                    VStack {
+                        Text("\(netWorking.cafe.clients)")
+                            .foregroundStyle(.black)
+                            .font(.system(size: 18, weight: .bold))
+                        Text("Клиенты")
+                            .foregroundStyle(.black)
+                            .font(.system(size: 13, weight: .semibold))
+                           
+                    }
+                    Spacer()
+                    
+                    Button(action: {
+                        showSheetEat = false
+                    }) {
+                        Image(.hideVC)
+                            .resizable()
+                            .frame(width: 40, height: 40)
+                    }
+                    .frame(width: 40, height: 40)
+                   
+                    
+
+                }
+                .frame(height: 60)
+            
+                
+                    
+                
                 ScrollView(.horizontal, showsIndicators: false) {
                     ScrollViewReader { scrollView in
                         HStack(alignment: .center, spacing: 10) {
@@ -51,6 +124,7 @@ struct ContentView: View {
                         }
                     }
                 }
+                .foregroundStyle(.green)
                 
                 
                 Spacer()
@@ -123,6 +197,7 @@ struct ContentView: View {
                         }
                     }
                 }
+                .foregroundStyle(.orange)
                 
                 
                 
@@ -150,7 +225,11 @@ struct ContentView: View {
         }
         
         
+        
     }
+    
+    
+    
     func checkSumm() -> Int {
         var sum = 0
         for i in order.orderArr {
@@ -167,6 +246,6 @@ struct ContentView: View {
 
 
 
-#Preview {
-    ContentView()
-}
+//#Preview {
+//    ContentView()
+//}

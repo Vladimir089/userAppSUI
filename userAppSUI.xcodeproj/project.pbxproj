@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		15000B532C83563100DB45BC /* AuthCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15000B522C83563100DB45BC /* AuthCode.swift */; };
 		150FE32D2C272AB300206E69 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 150FE32C2C272AB300206E69 /* Kingfisher */; };
 		15441B632C0655AB001AA91D /* CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15441B622C0655AB001AA91D /* CollectionView.swift */; };
 		15441B662C069347001AA91D /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 15441B652C069347001AA91D /* Alamofire */; };
@@ -63,6 +64,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		15000B522C83563100DB45BC /* AuthCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthCode.swift; sourceTree = "<group>"; };
 		15441B622C0655AB001AA91D /* CollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionView.swift; sourceTree = "<group>"; };
 		15441B942C077E51001AA91D /* CartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartView.swift; sourceTree = "<group>"; };
 		15441B962C07A02C001AA91D /* SegmentedPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedPicker.swift; sourceTree = "<group>"; };
@@ -138,6 +140,7 @@
 			isa = PBXGroup;
 			children = (
 				1568620A2C6D2B0E00328FC5 /* AuthView.swift */,
+				15000B522C83563100DB45BC /* AuthCode.swift */,
 			);
 			path = Auth;
 			sourceTree = "<group>";
@@ -371,6 +374,7 @@
 				157D78B32C024552001DED58 /* Model.swift in Sources */,
 				15441B972C07A02C001AA91D /* SegmentedPicker.swift in Sources */,
 				15441B632C0655AB001AA91D /* CollectionView.swift in Sources */,
+				15000B532C83563100DB45BC /* AuthCode.swift in Sources */,
 				15BE4B8E2C0F60CB00EADC73 /* StatusBar.swift in Sources */,
 				157D789B2C0242A1001DED58 /* ContentView.swift in Sources */,
 				1568620B2C6D2B0E00328FC5 /* AuthView.swift in Sources */,
@@ -532,7 +536,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"userAppSUI/Preview Content\"";
-				DEVELOPMENT_TEAM = 6YA7577C98;
+				DEVELOPMENT_TEAM = A3JK6544MF;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = userAppSUI/Info.plist;
@@ -568,7 +572,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"userAppSUI/Preview Content\"";
-				DEVELOPMENT_TEAM = 6YA7577C98;
+				DEVELOPMENT_TEAM = A3JK6544MF;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = userAppSUI/Info.plist;
@@ -602,7 +606,7 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 6YA7577C98;
+				DEVELOPMENT_TEAM = A3JK6544MF;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Live/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Live;
@@ -629,7 +633,7 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 6YA7577C98;
+				DEVELOPMENT_TEAM = A3JK6544MF;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Live/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Live;

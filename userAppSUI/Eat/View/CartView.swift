@@ -19,7 +19,7 @@ struct CartView: View {
     @State var buttonTitle = ""
     @State private var isButtonTap = false
     @Environment(\.presentationMode) var presentationMode
-    
+
     
     private let phoneFormatter = PhoneNumberFormatter()
     
@@ -299,7 +299,7 @@ struct CartView: View {
                                 }
                                 let menu = menuStrings.joined(separator: ", ")
                                 isButtonTap = true
-                                mainObject.createNewOrder(phonee: mainObject.phoneNumber, menuItems: menu, clientsNumber: mainObject.pribor, adres: mainObject.adress, totalCost: mainObject.totalCoast, paymentMethod: "наличка", timeOrder: "", cafeID: cafeID) { success in
+                                mainObject.createNewOrder(phonee: mainObject.phoneNumber, menuItems: menu, clientsNumber: mainObject.pribor, adres: mainObject.adress, totalCost: mainObject.totalCoast, paymentMethod: "наличка", timeOrder: "", cafeID: mainObject.cafeID) { success in
                                     if success {
                                         withAnimation {
                                             isNewOrder = true
@@ -417,9 +417,9 @@ struct CartView: View {
     }
 }
 
-#Preview {
-    ContentView()
-}
+//#Preview {
+//    ContentView()
+//}
 
 extension UISegmentedControl {
     override open func didMoveToSuperview() {

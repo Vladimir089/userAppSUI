@@ -27,6 +27,8 @@ class checkStatus: ObservableObject {
     @Published var isUser = false
     @Published var step = 1
     
+    @ObservedObject var mainModel: Networking
+    
     
     
 
@@ -34,19 +36,16 @@ class checkStatus: ObservableObject {
         if UserDefaults.standard.object(forKey: "idd") != nil {
             let idKey = UserDefaults.standard.object(forKey: "idd")
             orderID = idKey as! [String : Any]
-            print(orderID, 32423)
             isUser = true
             isUser = false
             startLiveActivity()
+            
         } else {
             return
         }
         cancellable = timer.sink { _ in
-            print(123)
             if let orderId = orderID["orderId"] as? Int {
-                print(123)
                 self.getStatusOrder(orderId: orderId){
-                    print(324234)
                     if let orderMessage = orderID["message"] as? String {
                         print("Received order message: \(orderMessage)")
 
@@ -55,7 +54,6 @@ class checkStatus: ObservableObject {
                             print(self.status)
                             UserDefaults.standard.removeObject(forKey: "idd")
                             self.removeLiveActivity()
-                            print(1243234)
                         }
                     }
                     
@@ -67,12 +65,14 @@ class checkStatus: ObservableObject {
         }
     }
 
-
-    init() {
+    
+    
+    init(mainModel: Networking) {
+        self.mainModel = mainModel
+        removeLiveActivity()
         if UserDefaults.standard.object(forKey: "idd") != nil {
             let idKey = UserDefaults.standard.object(forKey: "idd")
             orderID = idKey as! [String : Any]
-            print(orderID, 32423)
             isUser = true
             startLiveActivity()
         } else {
@@ -238,11 +238,10 @@ class checkStatus: ObservableObject {
 
     func getStatusOrder(orderId: Int, completion: @escaping () -> Void) {
         let headers: HTTPHeaders = [
-            HTTPHeader.authorization(bearerToken: token)
+            HTTPHeader.authorization(bearerToken: mainModel.token)
         ]
         
-        AF.request("http://arbamarket.ru/api/v1/delivery/update_status_order/?order_id=\(orderId)&cafe_id=\(cafeID)", method: .post, headers: headers).responseString { response in
-           
+        AF.request("http://arbamarket.ru/api/v1/delivery/update_status_order/?order_id=\(orderId)&cafe_id=\(mainModel.cafeID)", method: .post, headers: headers).responseString { response in
             switch response.result {
             case .success(let string):
                 

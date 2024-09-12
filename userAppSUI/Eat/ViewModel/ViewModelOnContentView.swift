@@ -9,19 +9,14 @@ import Foundation
 import Alamofire
 import AlamofireImage
 import Kingfisher
+import UIKit
 
 
 
-let cafeID = 2
-let token  = "73d2b9b6a303857b5854479692b05bd01defb73fb86fc5350689de1b637b764859b8993cb6b66870b3bac0c933d4d273a2e9d7a1c8ba0eabc0e03d083171c095c3da671d85336cff9e0abe44324489c7188b6c91e74d8043fabaecf6b4df2b0ceeee4e9ba19887b6372e1c4f8e2fe55c2058ffdedd022af452d2dd9db698853a"
 var orderID = ["orderId": Int(), "date": Date(), "message": "Начинаем готовить Ваш заказ...", "step": Int()] as [String : Any]
 
 
-
-
 class Networking: ObservableObject {
-    
-    
     
     @Published var arrCategories = [String]()
     @Published var allDishes: [(Dish, Image)] = []
@@ -33,6 +28,13 @@ class Networking: ObservableObject {
     @Published var phoneNumber = ""
     @Published var totalCoast = 0
     @Published var adressCoast = 0
+    
+    //cafe info
+    @Published var cafeID = 0
+    @Published var token  = ""
+    @Published var cafe = CafeInfo(name: "Байрам", image: (UIImage.bairam.jpegData(compressionQuality:1) ?? Data()), categories: ["Суши", "Пицца"], numberOrders: 777, clients: 90) //ТЕСТОВЫЕ ДАННЫЕ СДЕЛАТЬМ ЕТОД ПОЛУЧЕНИЯ ИНФЫ О КАФЕ
+
+    
     
     func checkuser() {
         if let phoneKey = UserDefaults.standard.string(forKey: "number")  {
@@ -50,8 +52,9 @@ class Networking: ObservableObject {
     func getDishes(completion: @escaping(Error?)-> Void) {
         
         let headers: HTTPHeaders = [.authorization(bearerToken: token)]
+        print(headers , "dsfds")
         AF.request("http://arbamarket.ru/api/v1/main/get_dishes/?cafe_id=\(cafeID)", method: .get, headers: headers).response { response in
-            
+            debugPrint(response)
             switch response.result {
             case .success(_):
                 if let status = response.response?.statusCode {
@@ -237,7 +240,7 @@ class Networking: ObservableObject {
             return
         }
         
-        AF.request("http://arbamarket.ru/api/v1/main/create_order/", method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+        AF.request("https://arbamarket.ru/api/v1/main/create_order/", method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
             
             switch response.result {
             case .success(let data):
@@ -258,8 +261,6 @@ class Networking: ObservableObject {
             }
         }
     }
-    
-    
     
 }
 
