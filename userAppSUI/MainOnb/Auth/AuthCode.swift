@@ -64,10 +64,17 @@ struct AuthCode: View {
                                 if success {
                                     mainMenuModel.saveToken()
                                     mainMenuModel.isAuth = true
+                                    let feedbackGenerator = UIImpactFeedbackGenerator(style: .soft)
+                                    feedbackGenerator.prepare()
+                                    feedbackGenerator.impactOccurred()
                                 } else {
-                                    triggerShakeEffect() // Запускаем анимацию встряски
+                                    triggerShakeEffect()
+                                    let feedbackGenerator = UIImpactFeedbackGenerator(style: .medium)
+                                    feedbackGenerator.prepare()
+                                    feedbackGenerator.impactOccurred()
                                 }
                             }                        }
+                        
                     }
                 }
                 .onAppear {

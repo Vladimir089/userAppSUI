@@ -31,6 +31,7 @@ struct ContentView: View {
             VStack {
                 
                 HStack {
+                    
                     Image(uiImage: UIImage(data: netWorking.cafe.image) ?? UIImage())
                         .resizable()
                         .clipShape(.buttonBorder)
@@ -40,35 +41,29 @@ struct ContentView: View {
                     VStack {
                         Spacer()
                         Text(netWorking.cafe.name)
-                            .foregroundStyle(.black)
+                            .foregroundStyle(.white)
                             .font(.system(size: 17, weight: .semibold))
                             .frame(maxWidth: .infinity, alignment: .leading)
                         Spacer()
                         
                         Text(netWorking.cafe.categories.joined(separator: ", "))
-                            .foregroundStyle(Color(UIColor(red: 156/255, green: 156/255, blue: 156/255, alpha: 1)))
+                            .foregroundStyle(.white)
                             .font(.system(size: 12, weight: .regular))
                             .frame(maxWidth: .infinity, alignment: .leading)
+                            .opacity(0.8)
                         
                         
                         Text("\(netWorking.cafe.numberOrders) Заказов")
-                            .foregroundStyle(Color(UIColor(red: 156/255, green: 156/255, blue: 156/255, alpha: 1)))
+                            .foregroundStyle(.white)
                             .font(.system(size: 12, weight: .regular))
                             .frame(maxWidth: .infinity, alignment: .leading)
+                            .opacity(0.8)
                         Spacer()
                     }
                     
                     Spacer()
                     
-                    VStack {
-                        Text("\(netWorking.cafe.clients)")
-                            .foregroundStyle(.black)
-                            .font(.system(size: 18, weight: .bold))
-                        Text("Клиенты")
-                            .foregroundStyle(.black)
-                            .font(.system(size: 13, weight: .semibold))
-                           
-                    }
+                    
                     Spacer()
                     
                     Button(action: {
@@ -81,9 +76,13 @@ struct ContentView: View {
                     .frame(width: 40, height: 40)
                    
                     
-
+                    
                 }
-                .frame(height: 60)
+                .padding(.horizontal, 10)
+                .padding(.bottom, 40)
+                .frame(width: 400, height: 100) //высота была 60
+                .background(.orange)
+                
             
                 
                     
@@ -124,7 +123,10 @@ struct ContentView: View {
                         }
                     }
                 }
+                .padding(.top, -40)  //test
                 .foregroundStyle(.green)
+                .cornerRadius(10)
+                .background(Color.red) //test
                 
                 
                 Spacer()
