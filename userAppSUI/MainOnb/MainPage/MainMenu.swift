@@ -1,122 +1,108 @@
-//
-//  MainMenu.swift
-//  userAppSUI
-//
-//  Created by Владимир Кацап on 16.08.2024.
-//
-
 import SwiftUI
-
-
 
 struct MainMenu: View {
     
     @ObservedObject var mainMenuModel = MainMenuViewModel()
-    @State private var showSheetEat = false
     
     @State private var selectedCategory = "Eat"
     
     var body: some View {
         NavigationView {
-            VStack {
-                
-                HStack {
-                    Text("Экосистема")
-                        .font(.system(size: 34, weight: .bold))
-                    
-                    Spacer()
-                    
-                    Button(action: {
-                        print("profile")
-                    }) {
-                        Image(uiImage: UIImage(data: mainMenuModel.profileImage) ?? UIImage())
+            ZStack {
+                // Содержимое ScrollView
+                ScrollView {
+                    VStack(spacing: 20) {
+                        HStack {
+                            Text("Куда угодно, когда удобно")
+                                .font(.system(size: 20, weight: .light))
+                            Spacer()
+                        }
+                        .padding(.horizontal, 15)
                         
-                            .resizable()
-                            .frame(width: 30, height: 30)
-                        
-                    }
-                    .frame(width: 30, height: 30)
-                    .padding()
-                }
-                
-                
-                HStack {
-                    Text("Куда угодно, когда удобно")
-                        .font(.system(size: 20, weight: .light))
-                    Spacer()
-                }
-                
-                HStack {
-                    
-                    Button(action: {
-                        selectedCategory = "Taxi"
-                    }) {
-                        Image(.taxi)
-                        
-                            .resizable()
+                        HStack {
+                            Button(action: {
+                                selectedCategory = "Taxi"
+                            }) {
+                                Image(.taxi)
+                                    .resizable()
+                                    .frame(width: 170, height: 194)
+                            }
                             .frame(width: 170, height: 194)
-                        
-                    }
-                    .frame(width: 170, height: 194)
-                    .padding()
-                    .disabled(true)
-                    
-                    Spacer()
-                    
-                    VStack {
-                        Button(action: {
-                            showSheetEat.toggle()
-                            selectedCategory = "Eat"
-                        }) {
-                            Image("eat")
-                                .resizable()
+                            .padding()
+                            .disabled(true)
+                            
+                            Spacer()
+                            
+                            VStack {
+                                Button(action: {
+                                    
+                                    selectedCategory = "Eat"
+                                }) {
+                                    Image("eat")
+                                        .resizable()
+                                        .frame(width: 170, height: 94)
+                                }
                                 .frame(width: 170, height: 94)
-                        }
-                        .frame(width: 170, height: 94)
-                        .fullScreenCover(isPresented: $showSheetEat) {
-                            ContentView(isShowingDetail: $showSheetEat, token: mainMenuModel.token, cafeID: 2, phone: mainMenuModel.phoneNumber)
-                        }
-
-                       
-                        
-                        Button(action: {
-                            selectedCategory = "Announcements"
-                        }) {
-                            Image(.avit)
-                                .resizable()
+                                
+                                
+                                Button(action: {
+                                    selectedCategory = "Announcements"
+                                }) {
+                                    Image(.avit)
+                                        .resizable()
+                                        .frame(width: 170, height: 94)
+                                }
                                 .frame(width: 170, height: 94)
+                            }
+                            Spacer()
                         }
-                        .frame(width: 170, height: 94)
                         
+                        VStack {
+                            switch selectedCategory {
+                            case "Eat":
+                                EatCategoryView(token: mainMenuModel.token, numberPhone: mainMenuModel.phoneNumber)
+                            case "Taxi", "Announcements":
+                                Text("Скоро!")
+                            default:
+                                Text("select category")
+                            }
+                        }
+                        
+                        Spacer()
                     }
-                    Spacer()
-                    
+                    .padding(.top, 45)
                 }
                 
-                
+                // Размытие фона
                 VStack {
-                    
-                    switch selectedCategory {
-                    case "Eat":
-                        EatCategoryView(token: mainMenuModel.token)
-                    case "Taxi":
-                        Text("Скоро!")
-                    case "Announcements":
-                        Text("Скоро!")
-                    default:
-                        Text("select category")
+                    HStack {
+                        Text("Экосистема")
+                            .font(.system(size: 34, weight: .bold))
+                        
+                        Spacer()
+                        
+                        Button(action: {
+                            print("profile")
+                        }) {
+                            Image(uiImage: UIImage(data: mainMenuModel.profileImage) ?? UIImage())
+                                .resizable()
+                                .frame(width: 30, height: 30)
+                        }
+                        .frame(width: 30, height: 30)
                     }
-                    
+                    .padding(.horizontal)
+                    .background(
+                        Color.white.opacity(0.95)
+                    )
                 }
-                
-                
-                
-                Spacer()
+                .frame(maxHeight: .infinity, alignment: .top)
             }
-            .padding().onAppear(perform: {
+            .onTapGesture {
+                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+            }
+            .onAppear(perform: {
                 mainMenuModel.checkToken()
             })
-            
             .fullScreenCover(isPresented: Binding<Bool>(
                 get: { !mainMenuModel.isAuth },
                 set: { _ in }
@@ -127,7 +113,3 @@ struct MainMenu: View {
         .navigationBarHidden(true)
     }
 }
-
-//#Preview {
-//    MainMenu()
-//}

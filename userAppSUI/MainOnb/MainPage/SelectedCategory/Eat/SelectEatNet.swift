@@ -20,6 +20,7 @@ class SelectedEatCategory: ObservableObject {
         let headers = HTTPHeaders(arrayLiteral: .authorization(bearerToken: token))
         
         AF.request("http://arbamarket.ru/api/v1/main/get_cafes_for_client_app/", method: .get, headers: headers).response { response in
+            debugPrint(response)
             switch response.result {
             case .success(let data):
                 if let data = data, let cafeResponse = try? JSONDecoder().decode(CafeResponse.self, from: data) {

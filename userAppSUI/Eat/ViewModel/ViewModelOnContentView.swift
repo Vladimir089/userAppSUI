@@ -32,7 +32,6 @@ class Networking: ObservableObject {
     //cafe info
     @Published var cafeID = 0
     @Published var token  = ""
-    @Published var cafe = CafeInfo(name: "Байрам", image: (UIImage.bairam.jpegData(compressionQuality:1) ?? Data()), categories: ["Суши", "Пицца"], numberOrders: 777, clients: 90) //ТЕСТОВЫЕ ДАННЫЕ СДЕЛАТЬМ ЕТОД ПОЛУЧЕНИЯ ИНФЫ О КАФЕ
 
     
     

@@ -4,6 +4,10 @@ import SnapKit
 
 
 struct ContentView: View {
+    
+    var cafe: Cafe
+    @State var token: String?
+    
     @Binding var showSheetEat: Bool
     @ObservedObject var netWorking: Networking
     @ObservedObject var checkStatusModelView: checkStatus
@@ -12,20 +16,18 @@ struct ContentView: View {
     @ObservedObject var order = Order()
     @State var showingCart = false
     
-    @State var token: String
-    @State var cafeID: Int
     
-    init(isShowingDetail: Binding<Bool>, token: String, cafeID: Int, phone: String) {
+    init(isShowingDetail: Binding<Bool>, token: String, cafe: Cafe, phone: String) {
         self._showSheetEat = isShowingDetail
         self.token = token
-        self.cafeID = cafeID
+        self.cafe = cafe
         let netWorkingInstance = Networking()
         netWorkingInstance.token = token
         self.netWorking = netWorkingInstance
         self.checkStatusModelView = checkStatus(mainModel: netWorkingInstance)
-        self.netWorking.cafeID = cafeID
+        self.netWorking.cafeID = cafe.id
         self.netWorking.phoneNumber = phone
-        print(netWorking.phoneNumber, "dsfdsffdsdfsfs")
+        print( "dsfdsffdsdfsfs")
     }
     
     var body: some View {
@@ -33,21 +35,21 @@ struct ContentView: View {
             ZStack {
                 VStack {
                     HStack {
-                        Image(uiImage: UIImage(data: netWorking.cafe.image) ?? UIImage())
+                        Image(uiImage: UIImage(data: cafe.image ?? Data()) ?? UIImage())
                             .resizable()
                             .clipShape(.buttonBorder)
                             .frame(width: 40, height: 40)
                         //Spacer()
                         VStack {
                             Spacer()
-                            Text(netWorking.cafe.name)
+                            Text(cafe.title)
                                 .foregroundStyle(.white)
                                 .font(.system(size: 17, weight: .semibold))
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.top)
                             Spacer()
                             
-                            Text("\(netWorking.cafe.numberOrders) Заказов")
+                            Text(cafe.address)
                                 .foregroundStyle(.white)
                                 .font(.system(size: 12, weight: .regular))
                                 .frame(maxWidth: .infinity, alignment: .leading)
