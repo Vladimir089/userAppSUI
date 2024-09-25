@@ -51,7 +51,7 @@ class checkStatus: ObservableObject {
 
                         if orderMessage == "Заказ завершен" || orderMessage == "Заказ выполнен" || orderMessage == "Заказ отменен" {
                             self.isHidden = true
-                            print(self.status)
+                            //print(self.status)
                             UserDefaults.standard.removeObject(forKey: "idd")
                             self.removeLiveActivity()
                         }
@@ -242,13 +242,13 @@ class checkStatus: ObservableObject {
         ]
         
         AF.request("http://arbamarket.ru/api/v1/delivery/update_status_order/?order_id=\(orderId)&cafe_id=\(mainModel.cafeID)", method: .post, headers: headers).responseString { response in
+            //debugPrint(response)
             switch response.result {
             case .success(let string):
                 
                 if let data = response.data {
                     // Печать данных перед декодированием
                     do {
-                        
                         // Декодируйте ответ в структуру
                         let decoder = JSONDecoder()
                         let stat = try decoder.decode(getStatusToOrderStruct.self, from: data)
@@ -256,7 +256,7 @@ class checkStatus: ObservableObject {
                         orderID["step"] = stat.step
                         self.status = stat.order_status ?? ""
                         self.step = stat.step ?? 0
-                        print(self.step, 2222)
+                        print(self.step, "step")
                         if self.step == 1 || self.status == "Начинаем готовить Ваш заказ..." {
                             self.wasFirstStepCompleted = true
                             orderID["message"] = "Начинаем готовить Ваш заказ..."
@@ -271,6 +271,23 @@ class checkStatus: ObservableObject {
                             orderID["message"] = "Встречайте ~ 5 минут марка"
                         }
                         
+                        if let jsonData = string.data(using: .utf8) {
+                            if let json = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any] {
+                                // Получаем значение поля "detail"
+                                if let detailMessage = json["detail"] as? String {
+                                    if detailMessage == "Not Found: No Order matches the given query." {
+                                        self.isHidden = true
+                                        print(self.status)
+                                        self.cancellable?.cancel()
+                                        self.cancellableTime?.cancel()
+                                        UserDefaults.standard.removeObject(forKey: "idd")
+                                        self.removeLiveActivity()
+                                    }
+                                }
+                            }
+                        }
+                        
+                        
                         if  stat.order_status == "Заказ завершен" ||  stat.order_status == "Заказ выполнен" ||  stat.order_status == "Заказ отменен" {
                             self.isHidden = true
                             print(self.status)
@@ -280,13 +297,15 @@ class checkStatus: ObservableObject {
                             self.removeLiveActivity()
                             print(1243234)
                         }
-                    } catch {
-                        print("JSON Decode Error: \(error.localizedDescription)")
                         
-                        if let dataString = String(data: data, encoding: .utf8) {
-                            print(dataString)
+                       
+                        } catch {
+                            print("JSON Decode Error: \(error.localizedDescription)")
+                            
+                            if let dataString = String(data: data, encoding: .utf8) {
+                                print(dataString)
+                            }
                         }
-                    }
                 }
             case .failure(let error):
                 print("Request failed with error: \(error.localizedDescription)")

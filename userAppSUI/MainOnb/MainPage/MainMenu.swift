@@ -14,21 +14,11 @@ struct MainMenu: View {
     @ObservedObject var mainMenuModel = MainMenuViewModel()
     @State private var showSheetEat = false
     
-   
+    @State private var selectedCategory = "Eat"
     
     var body: some View {
         NavigationView {
             VStack {
-                
-                
-                HStack {
-                    Spacer()
-                    Button("\(mainMenuModel.selectedRegion)") {
-                        print("Выбор")
-                    }
-                    .font(.system(size: 15))
-                }
-                
                 
                 HStack {
                     Text("Экосистема")
@@ -37,7 +27,7 @@ struct MainMenu: View {
                     Spacer()
                     
                     Button(action: {
-                        print(23)
+                        print("profile")
                     }) {
                         Image(uiImage: UIImage(data: mainMenuModel.profileImage) ?? UIImage())
                         
@@ -47,10 +37,6 @@ struct MainMenu: View {
                     }
                     .frame(width: 30, height: 30)
                     .padding()
-                    
-                    
-                    
-                    
                 }
                 
                 
@@ -63,7 +49,7 @@ struct MainMenu: View {
                 HStack {
                     
                     Button(action: {
-                        print(23)
+                        selectedCategory = "Taxi"
                     }) {
                         Image(.taxi)
                         
@@ -80,7 +66,7 @@ struct MainMenu: View {
                     VStack {
                         Button(action: {
                             showSheetEat.toggle()
-                            
+                            selectedCategory = "Eat"
                         }) {
                             Image("eat")
                                 .resizable()
@@ -88,20 +74,20 @@ struct MainMenu: View {
                         }
                         .frame(width: 170, height: 94)
                         .fullScreenCover(isPresented: $showSheetEat) {
-                            ContentView(isShowingDetail: $showSheetEat, token: mainMenuModel.token, cafeID: 2)
+                            ContentView(isShowingDetail: $showSheetEat, token: mainMenuModel.token, cafeID: 2, phone: mainMenuModel.phoneNumber)
                         }
 
                        
                         
                         Button(action: {
-                            print(23)
+                            selectedCategory = "Announcements"
                         }) {
                             Image(.avit)
                                 .resizable()
                                 .frame(width: 170, height: 94)
                         }
                         .frame(width: 170, height: 94)
-                        .disabled(true)
+                        
                     }
                     Spacer()
                     
@@ -109,7 +95,18 @@ struct MainMenu: View {
                 
                 
                 VStack {
-                    Text("прочий контент")
+                    
+                    switch selectedCategory {
+                    case "Eat":
+                        EatCategoryView(token: mainMenuModel.token)
+                    case "Taxi":
+                        Text("Скоро!")
+                    case "Announcements":
+                        Text("Скоро!")
+                    default:
+                        Text("select category")
+                    }
+                    
                 }
                 
                 
@@ -127,6 +124,7 @@ struct MainMenu: View {
                 AuthView(mainMenuModel: mainMenuModel, numbTel: "+7")
             }
         }
+        .navigationBarHidden(true)
     }
 }
 

@@ -176,7 +176,10 @@ struct CartView: View {
                                             buttonTitle = "Оформить заказ \(mainObject.totalCoast) ₽"
                                         }
                                 }.padding(.top, 5)
+                                
                             }
+                            
+                            
 
                             
                             
@@ -279,17 +282,23 @@ struct CartView: View {
                                 }
                                 
                                 
+                                
                             }
                             
                         }
                         
+                        Section {
+                            Rectangle()
+                                .fill(Color.clear)
+                                .frame(height: 50)
+                        }
+                        .listRowBackground(Color.clear)
+                        .frame(height: 50)
                         
                         
                     }.transition(.scale)
                         .scrollContentBackground(.hidden)
                         
-                    
-                   
                     VStack {
                         Spacer()
                         if keyboardHeight == 0 {
@@ -350,15 +359,18 @@ struct CartView: View {
                             .onAppear {
                                 buttonTitle = "Оформить заказ \(mainObject.totalCoast) ₽"
                             }
+                            
                         }
                             
                     }
                     
                     
                 }
+               
                 
                 
             }
+            
             .background(Color(UIColor(red: 239/255, green: 239/255, blue: 244/255, alpha: 1)))
             .onAppear {
                 NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: .main) { (noti) in

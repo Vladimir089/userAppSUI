@@ -52,9 +52,7 @@ class Networking: ObservableObject {
     func getDishes(completion: @escaping(Error?)-> Void) {
         
         let headers: HTTPHeaders = [.authorization(bearerToken: token)]
-        print(headers , "dsfds")
         AF.request("http://arbamarket.ru/api/v1/main/get_dishes/?cafe_id=\(cafeID)", method: .get, headers: headers).response { response in
-            debugPrint(response)
             switch response.result {
             case .success(_):
                 if let status = response.response?.statusCode {
@@ -82,7 +80,6 @@ class Networking: ObservableObject {
                     group.notify(queue: .main) {
                         self.isDataLoaded = true
                         completion(nil)
-                        
                     }
                 } else {
                     completion(nil)
@@ -97,16 +94,13 @@ class Networking: ObservableObject {
 
     func getImage(d: Dish, completion: @escaping () -> Void) {
         if let url = d.img {
-            let imageURL = URL(string: "http://arbamarket.ru\(url)")
             
-            KingfisherManager.shared.retrieveImage(with: imageURL!) { result in
-                switch result {
-                case .success(let value):
-                    let image = value.image
-                    self.allDishes.append((d, image)) // Добавляем кортеж с изображением
-                case .failure(_):
-                    let placeholderImage = Image(named: "standart")
-                    self.allDishes.append((d, placeholderImage!))
+            KingfisherManager.shared.retrieveImage(with: URL(string: "http://arbamarket.ru\(url)")!) { response in
+                switch response {
+                case .success(let image):
+                    self.allDishes.append((d, image.image))
+                case .failure(let error):
+                    self.allDishes.append((d, .bairam ))
                 }
                 completion()
             }
@@ -132,7 +126,7 @@ class Networking: ObservableObject {
     func getAdress(adres: String, completion: @escaping ([String]) -> Void) {
         let headers: HTTPHeaders = [.accept("application/json")]
         AF.request("http://arbamarket.ru/api/v1/main/get_similar_addresses/?cafe_id=\(cafeID)&value=\(adres)", method: .get, headers: headers).responseJSON { response in
-            debugPrint(response)
+            //debugPrint(response)
             switch response.result {
             case .success(let value):
                 guard let json = value as? [String: Any] else {
@@ -152,7 +146,7 @@ class Networking: ObservableObject {
         let headers: HTTPHeaders = [.accept("application/json")]
         let adresText: String = adress ?? ""
         AF.request("http://arbamarket.ru/api/v1/main/get_total_cost/?cafe_id=\(cafeID)&menu=\(0)&address=\(String(describing: adresText))", method: .get, headers: headers).responseJSON { response in
-            debugPrint(response)
+            //debugPrint(response)
             switch response.result {
             case .success(let value):
                 if let json = value as? [String: Any] {
@@ -185,8 +179,7 @@ class Networking: ObservableObject {
        
         let adresText: String = adress ?? ""
         AF.request("http://arbamarket.ru/api/v1/main/get_total_cost/?cafe_id=\(cafeID)&menu=\(menu)&address=\(String(describing: adresText))", method: .get, headers: headers).responseJSON { response in
-            debugPrint(response)
-            print(menu)
+            //debugPrint(response)
             switch response.result {
             case .success(let value):
                 if let json = value as? [String: Any] {
@@ -194,9 +187,6 @@ class Networking: ObservableObject {
                        let addressCost = json["address_cost"] as? Int {
                         self.totalCoast = totalCost
                         self.adressCoast = addressCost
-                        
-                        print(self.adressCoast)
-                        print(self.totalCoast)
                     }
                 } else {
                     print("Invalid JSON format")
@@ -217,22 +207,17 @@ class Networking: ObservableObject {
             HTTPHeader.authorization(bearerToken: token)
         ]
         
-        var phone = phonee
-        if phone.hasPrefix("+7") {
-            phone.removeFirst(2)
-        } else if phone.hasPrefix("8") {
-            phone.removeFirst()
-        }
-
+        
         let parameters: [String : Any] = [
-            "phone": phone,
+            "phone": phonee,
             "menu_items": menuItems,
-            "clients_number": clientsNumber,
+            "clients_number": commentOrder, //clientsNumbr
             "address": adress,
             "total_cost": totalCoast,
             "payment_method": "Наличка",
             //"order_on_time": timeOrder,  // к определенному времени
             "cafe_id": cafeID
+            
         ]
         
         if phonee == "" || menuItems == "" || clientsNumber == 0 || adress == "" || totalCost == 0 {
@@ -240,8 +225,7 @@ class Networking: ObservableObject {
             return
         }
         
-        AF.request("https://arbamarket.ru/api/v1/main/create_order/", method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
-            
+        AF.request("http://arbamarket.ru/api/v1/main/create_order/", method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
             switch response.result {
             case .success(let data):
                 if let jsonData = data as? [String: Any] {
@@ -250,7 +234,7 @@ class Networking: ObservableObject {
                         UserDefaults.standard.setValue(adres, forKey: "adres")
                         orderID = ["orderId": orderId, "date": Date.now, "message": "Начинаем готовить Ваш заказ...", "step": 1]
                         UserDefaults.standard.setValue(orderID, forKey: "idd")
-                        print(orderID)
+                        //print(orderID)
                         completion(true)
                     } else {
                         completion(false)

@@ -38,7 +38,6 @@ struct DostView: View {
                         }
                     )
                     .onChange(of: adr) { newValue in
-                        print(1)
                         model.getAdress(adres: newValue) { fullAddresses in
                             adressArr = fullAddresses
                         }

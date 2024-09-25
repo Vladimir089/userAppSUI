@@ -168,7 +168,6 @@ struct CollectionView: UIViewRepresentable {
                 if let firstVisibleSection = visibleSections.first {
                     let category = parent.sections[firstVisibleSection].0
                     triggerHapticFeedbackSoft()
-                    print(12)
                     NotificationCenter.default.post(name: .updateScrolledCategory, object: category)
                 }
             }

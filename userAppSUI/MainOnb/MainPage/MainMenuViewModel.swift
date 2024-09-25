@@ -16,6 +16,7 @@ class MainMenuViewModel: ObservableObject {
     @Published var profileImage: Data = (UIImage.elon.jpegData(compressionQuality:1) ?? Data())
     @Published var isAuth = true
     @Published var token = ""
+    @Published var phoneNumber = ""
     
     
     
@@ -66,26 +67,32 @@ class MainMenuViewModel: ObservableObject {
             switch response.result {
             case .success(let value):
                 print("Success with JSON: \(value)")
-                print(34)
                 completion(true) // Возвращаем true в случае успеха
             case .failure(let error):
                 print("Error: \(error)")
-                print(34222)
                 completion(false) // Возвращаем false в случае ошибки
             }
         }
     }
     
     func saveToken() {
-        UserDefaults.standard.setValue(String(token), forKey: "Token")
+        UserDefaults.standard.setValue(String(token), forKey: "TokenNew")
+    }
+    
+    func savePhone(phone: String) {
+        UserDefaults.standard.setValue(String(phone), forKey: "phoneNumber")
     }
     
     func checkToken() {
-        if let token = UserDefaults.standard.object(forKey: "Token") as? String {
+        if let token = UserDefaults.standard.object(forKey: "TokenNew") as? String {
             self.token = token
             isAuth = true
         } else {
             isAuth = false
+        }
+        
+        if let phone = UserDefaults.standard.object(forKey: "phoneNumber") as? String {
+            self.phoneNumber = phone
         }
     }
     

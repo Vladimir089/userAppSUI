@@ -33,9 +33,8 @@ struct AuthView: View {
                     .padding()
                     .keyboardType(.numberPad)
                     .background(Color.white)
-                    .clipShape(Capsule())
                     .overlay(
-                        Capsule()
+                        RoundedRectangle(cornerRadius: 10)
                             .stroke(Color.black, lineWidth: 1)
                     )
                     .padding()
@@ -74,7 +73,7 @@ struct AuthView: View {
                         .font(.system(size: 20, weight: .bold))
                         .padding() // Отступы добавляются здесь
                         .frame(maxWidth: .infinity, minHeight: 50) // Размеры задаются после отступов
-                        .background(numbTel.count == 12 ? Color.blue : Color.gray)
+                        .background(numbTel.count == 12 ? Color.figmaOrange : Color.gray)
                         .clipShape(Capsule())
                         .contentShape(Capsule()) // Область нажатия определяется здесь
                 }

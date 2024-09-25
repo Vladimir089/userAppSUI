@@ -36,10 +36,10 @@ struct AuthCode: View {
             HStack(spacing: 15) {
                 ForEach(0..<4) { index in
                     Circle()
-                        .strokeBorder(isError ? .red : .blue, lineWidth: 1)
+                        .strokeBorder(isError ? .red : .figmaOrange, lineWidth: 1)
                         .background(
                             Circle()
-                                .foregroundColor(index < code.count ? (isError ? .red : .blue) : .clear)
+                                .foregroundColor(index < code.count ? (isError ? .red : .figmaOrange) : .clear)
                         )
                         .frame(width: 10, height: 10)
                         .offset(x: shakeOffset) // Применяем смещение
@@ -63,6 +63,8 @@ struct AuthCode: View {
                             mainMenuModel.verifyCode(code: code, token: mainMenuModel.token) { success in
                                 if success {
                                     mainMenuModel.saveToken()
+                                    mainMenuModel.savePhone(phone: number)
+                                    mainMenuModel.phoneNumber = number
                                     mainMenuModel.isAuth = true
                                     let feedbackGenerator = UIImpactFeedbackGenerator(style: .soft)
                                     feedbackGenerator.prepare()
@@ -102,7 +104,7 @@ struct AuthCode: View {
                     .foregroundColor(.white)
                     .font(.system(size: 20, weight: .bold))
                     .frame(maxWidth: .infinity)
-                    .background(isButtonDisabled ? Color.gray : Color.blue)
+                    .background(isButtonDisabled ? Color.gray : Color.figmaOrange)
                     .clipShape(Capsule())
                     .padding()
                     .contentShape(Capsule())
