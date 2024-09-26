@@ -99,7 +99,7 @@ class Networking: ObservableObject {
                 case .success(let image):
                     self.allDishes.append((d, image.image))
                 case .failure(let error):
-                    self.allDishes.append((d, .bairam ))
+                    self.allDishes.append((d, .standart ))
                 }
                 completion()
             }

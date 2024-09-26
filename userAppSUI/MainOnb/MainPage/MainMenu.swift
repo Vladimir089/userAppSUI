@@ -4,7 +4,7 @@ struct MainMenu: View {
     
     @ObservedObject var mainMenuModel = MainMenuViewModel()
     
-    @State private var selectedCategory = "Eat"
+    @State private var selectedCategory = ""
     
     var body: some View {
         NavigationView {
@@ -61,6 +61,7 @@ struct MainMenu: View {
                             switch selectedCategory {
                             case "Eat":
                                 EatCategoryView(token: mainMenuModel.token, numberPhone: mainMenuModel.phoneNumber)
+                                
                             case "Taxi", "Announcements":
                                 Text("Скоро!")
                             default:

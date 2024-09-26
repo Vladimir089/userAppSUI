@@ -39,6 +39,7 @@ struct ContentView: View {
                             .resizable()
                             .clipShape(.buttonBorder)
                             .frame(width: 40, height: 40)
+                        
                         //Spacer()
                         VStack {
                             Spacer()
@@ -47,13 +48,12 @@ struct ContentView: View {
                                 .font(.system(size: 17, weight: .semibold))
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.top)
-                            Spacer()
+                            
                             
                             Text(cafe.address)
                                 .foregroundStyle(.white)
-                                .font(.system(size: 12, weight: .regular))
+                                .font(.system(size: 13, weight: .regular))
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                                .opacity(0.8)
                                 .padding(.bottom)
                             Spacer()
                         }

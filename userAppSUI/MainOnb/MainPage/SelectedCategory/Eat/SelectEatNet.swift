@@ -15,26 +15,42 @@ class SelectedEatCategory: ObservableObject {
     
     @Published var isLoading = true
     @Published var cafeArr: [Cafe] = []
+    @Published var selectedCafe: Cafe?
     
     func loadCafeInfo(token: String) {
-        let headers = HTTPHeaders(arrayLiteral: .authorization(bearerToken: token))
+        cafeArr.removeAll()
+        let headers = HTTPHeaders([.authorization(bearerToken: token)])
         
         AF.request("http://arbamarket.ru/api/v1/main/get_cafes_for_client_app/", method: .get, headers: headers).response { response in
-            debugPrint(response)
             switch response.result {
             case .success(let data):
-                if let data = data, let cafeResponse = try? JSONDecoder().decode(CafeResponse.self, from: data) {
-                    var cafes = cafeResponse.cafes
-                    self.loadCafeImages(for: cafes) { updatedCafes in
-                        self.cafeArr = updatedCafes
-                        self.isLoading = false
-                    }
+                if let data = data {
+                    self.decodeCafeData(data)
+                } else {
+                    print("Ошибка: Получены пустые данные")
+                    self.isLoading = false
                 }
             case .failure(let error):
-                print(error)
+                print("Ошибка запроса: \(error.localizedDescription)")
+                self.isLoading = false
             }
         }
     }
+
+    private func decodeCafeData(_ data: Data) {
+        do {
+            let cafeResponse = try JSONDecoder().decode(CafeResponse.self, from: data)
+            let cafes = cafeResponse.cafes
+            self.loadCafeImages(for: cafes) { updatedCafes in
+                self.cafeArr = updatedCafes
+                self.isLoading = false
+            }
+        } catch {
+            print("Ошибка декодирования данных: \(error.localizedDescription)")
+            self.isLoading = false
+        }
+    }
+
 
     func loadCafeImages(for cafes: [Cafe], completion: @escaping ([Cafe]) -> Void) {
         var updatedCafes = cafes

@@ -12,12 +12,10 @@ struct EatCategoryView: View {
     
     var token: String
     var numberPhone: String
-    
+
     @ObservedObject private var mainWork = SelectedEatCategory()
     @State private var searchText = ""
     @State private var showSheetEat = false
-    @State var selectedCafe: Cafe?
-    //@State var selectedCafe: Cafe = Cafe(id: 2, img: "sdfsdfsd", title: "1", address: "f", number: "1", image: <#T##Data?#>)
     
     var filteredCafeArr: [Cafe] {
         if searchText.isEmpty {
@@ -29,14 +27,13 @@ struct EatCategoryView: View {
                 cafe.address.lowercased().contains(searchText.lowercased())
             }
         }
+        
     }
     
     init(token: String, numberPhone: String) {
-           self.token = token
-           self.numberPhone = numberPhone
-           
-            mainWork.loadCafeInfo(token: token)
-       }
+        self.token = token
+        self.numberPhone = numberPhone
+    }
     
     
     
@@ -88,38 +85,37 @@ struct EatCategoryView: View {
                                                 .foregroundColor(Color.gray)
                                                 .frame(height: 0.3)
                                         }
+                                        
                                     }
                                     .padding(.horizontal)
                                     
+                                   
 
-                                }
-                                .onTapGesture {
-                                    DispatchQueue.main.async {
-                                        selectedCafe = cafe
-                                        showSheetEat.toggle()
-                                    }
-
-                                    
-                                    showSheetEat.toggle() // Измените это
-                                    print("Tapped cafe: \(cafe)")
                                 }
                                 .padding(.bottom, 3)
+                                .onTapGesture {
+                                    mainWork.selectedCafe = cafe
+                                    showSheetEat = true
+                                }
                             }
                             
                         }
                         .padding()
+                        
                     }
                 }
             }
         }
+        .onAppear(perform: {
+            
+            mainWork.loadCafeInfo(token: token)
+        })
         .fullScreenCover(isPresented: $showSheetEat) {
-            if let cafe = selectedCafe {
-                ContentView(isShowingDetail: $showSheetEat, token: token, cafe: cafe, phone: numberPhone) //НЕ РАБОТАЕТ
-            } else {
-                Text("Не выбрано кафе")
-                    .padding()
+            if let cafe = mainWork.selectedCafe {
+                ContentView(isShowingDetail: $showSheetEat, token: token, cafe:  cafe, phone: numberPhone)
             }
         }
+
 
     }
 
