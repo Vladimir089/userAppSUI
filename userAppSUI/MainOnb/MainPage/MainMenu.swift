@@ -6,6 +6,8 @@ struct MainMenu: View {
     
     @State private var selectedCategory = ""
     
+    @State private var isProfileOpen = false 
+    
     var body: some View {
         NavigationView {
             ZStack {
@@ -83,13 +85,16 @@ struct MainMenu: View {
                         Spacer()
                         
                         Button(action: {
-                            print("profile")
+                            isProfileOpen = true
                         }) {
                             Image(uiImage: UIImage(data: mainMenuModel.profileImage) ?? UIImage())
                                 .resizable()
                                 .frame(width: 30, height: 30)
                         }
                         .frame(width: 30, height: 30)
+                        .fullScreenCover(isPresented: $isProfileOpen) {
+                            ProfileView(isProfileOpen: $isProfileOpen, phoneNumber: $mainMenuModel.phoneNumber, menu: mainMenuModel)
+                        }
                     }
                     .padding(.horizontal)
                     .background(
