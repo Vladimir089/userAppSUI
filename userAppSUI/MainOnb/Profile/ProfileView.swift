@@ -7,6 +7,7 @@
 
 import SwiftUI
 import WebKit
+import SwiftUIIntrospect
 
 struct ProfileView: View {
     
@@ -16,8 +17,15 @@ struct ProfileView: View {
     @State private var showingWebView = false
     var menu: MainMenuViewModel
     @State private var showingAlert = false
+    @State var isShowFillName = false
+    
+    @State var selectedCity = "Учкекен"
+    @State var isSelectCity = false
+    
     
     var body: some View {
+        GeometryReader(content: { geometry in
+         
         NavigationView {
             ZStack {
                 VStack {
@@ -65,36 +73,52 @@ struct ProfileView: View {
                         Form {
                             
                             Section {
-                                HStack {
-                                    Image(.imageUser)
-                                        .resizable()
-                                        .frame(width: 60, height: 60)
-                                    
-                                    VStack {
-                                        TextField("Как тебя зовут?", text: $nameUser)
-                                            .foregroundStyle(.black)
-                                            .font(.system(size: 23, weight: .regular))
-                                            .onChange(of: nameUser) { newValue in
-                                                UserDefaults.standard.set(newValue, forKey: "nameUser")
+                                ZStack {
+                                    // Добавляем тень на фоне
+                                    HStack {
+                                        Image(.imageUser)
+                                            .resizable()
+                                            .frame(width: 60, height: 60)
+                                        
+                                        VStack {
+                                            ZStack {
+                                                TextField("Как тебя зовут?", text: $nameUser)
+                                                    .foregroundStyle(.black)
+                                                    .font(.system(size: 23, weight: .regular))
+                                                    .disabled(true) // Отключаем ввод текста
+                                                    
+                                                Button(action: {
+                                                    isShowFillName = true // Ваше действие при нажатии
+                                                }) {
+                                                    // Прозрачная кнопка
+                                                    Rectangle()
+                                                        .foregroundColor(.clear) // Делаем кнопку прозрачной
+                                                }
+                                                .contentShape(Rectangle()) // Ограничиваем область нажатия размером TextField
                                             }
-                                        
-                                        Text(phoneNumber)
-                                            .foregroundStyle(.black)
-                                            .font(.system(size: 15, weight: .light))
-                                            .frame(maxWidth: .infinity, alignment: .leading)
-                                        
+
+                                            Text(phoneNumber)
+                                                .foregroundStyle(.black)
+                                                .font(.system(size: 15, weight: .light))
+                                                .frame(maxWidth: .infinity, alignment: .leading)
+                                                //.offset(x: 0, y: -15)
+                                        }
+                                        .padding(.leading, 5)
                                     }
-                                    .padding(.leading, 5)
+                                    .frame(maxHeight: 50)
                                     
                                 }
-                                
-                                NavigationLink("Учкекен") {
-                                    Text("Это новый экран Учкекен")
+                                //.frame(maxHeight: 50)
+
+                                Button(selectedCity) {
+                                   isSelectCity = true
                                 }
-                                .foregroundColor(.black)
-                                
+                                .foregroundStyle(.black)
+                               
                             }
                             .listRowBackground(Color.black.opacity(0.05))
+
+                            
                             
                             Section {
                                 NavigationLink("Адреса") {
@@ -125,12 +149,15 @@ struct ProfileView: View {
                                 .font(.system(size: 23, weight: .light))
                                 .frame(height: 50)
                             }
-                            .listRowBackground(Color.black.opacity(0.05))
+                            .listRowBackground(Color.white)
                             
                             
                             
                         }
+                        .scrollDisabled(true)
                         .scrollContentBackground(.hidden)
+                        
+                        
                         
                         .foregroundColor(.white)
                         .background(.white)
@@ -181,9 +208,23 @@ struct ProfileView: View {
                         .sheet(isPresented: $showingWebView) {
                             WebView(url: URL(string: "https://www.termsfeed.com/live/84d45da4-1d6a-49d8-92fa-1bb28feb9322")!)
                         }
+                        .sheet(isPresented: $isShowFillName) {
+                            FillNameinProfile(name: $nameUser)
+                                .presentationDetents([.fraction(0.2), .large])
+                                .ignoresSafeArea(.keyboard)
+                        }
+                        .sheet(isPresented: $isSelectCity) {
+                            SelectCityView(selectedCity: $selectedCity, isOpen: $isSelectCity)
+                                .presentationDetents([.medium, .large])
+                                .ignoresSafeArea(.keyboard)
+                        }
+                        
+                        
+                        
                         
                     }
                     .offset(x: 0, y: -50)
+                    
                     
                     Spacer()
                     
@@ -193,10 +234,17 @@ struct ProfileView: View {
                 if let savedName = UserDefaults.standard.string(forKey: "nameUser") {
                     nameUser = savedName
                 }
+
+                if let selectCity = UserDefaults.standard.string(forKey: "SelectedCity") {
+                    selectedCity = selectCity
+                }
             }
             .contentShape(Rectangle()) // Чтобы весь ZStack реагировал на нажатия
             
         }
+            
+        })
+        .ignoresSafeArea(.keyboard, edges: .all)
     }
 }
 

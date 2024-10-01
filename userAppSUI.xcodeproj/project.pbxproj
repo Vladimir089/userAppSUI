@@ -16,6 +16,9 @@
 		15441B952C077E51001AA91D /* CartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15441B942C077E51001AA91D /* CartView.swift */; };
 		15441B972C07A02C001AA91D /* SegmentedPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15441B962C07A02C001AA91D /* SegmentedPicker.swift */; };
 		156357822CAB3D4900B54265 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156357812CAB3D4900B54265 /* ProfileView.swift */; };
+		156357852CAC073B00B54265 /* SwiftUIIntrospect in Frameworks */ = {isa = PBXBuildFile; productRef = 156357842CAC073B00B54265 /* SwiftUIIntrospect */; };
+		156357872CAC08D300B54265 /* FillNameinProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156357862CAC08D300B54265 /* FillNameinProfile.swift */; };
+		156357892CAC1ABA00B54265 /* SelectCityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156357882CAC1ABA00B54265 /* SelectCityView.swift */; };
 		1568620B2C6D2B0E00328FC5 /* AuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1568620A2C6D2B0E00328FC5 /* AuthView.swift */; };
 		157D78992C0242A1001DED58 /* userAppSUIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 157D78982C0242A1001DED58 /* userAppSUIApp.swift */; };
 		157D789B2C0242A1001DED58 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 157D789A2C0242A1001DED58 /* ContentView.swift */; };
@@ -30,7 +33,6 @@
 		15B42C3C2CA44BBA00CE398C /* SelectEatNet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B42C3B2CA44BBA00CE398C /* SelectEatNet.swift */; };
 		15B42C3F2CA4504200CE398C /* EatCategoryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B42C3E2CA4504200CE398C /* EatCategoryModel.swift */; };
 		15BE4B7C2C0B9D6600EADC73 /* DostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15BE4B7B2C0B9D6600EADC73 /* DostView.swift */; };
-		15BE4B842C0E0ED000EADC73 /* SwiftUIIntrospect in Frameworks */ = {isa = PBXBuildFile; productRef = 15BE4B832C0E0ED000EADC73 /* SwiftUIIntrospect */; };
 		15BE4B8E2C0F60CB00EADC73 /* StatusBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15BE4B8D2C0F60CB00EADC73 /* StatusBar.swift */; };
 		15BE4B962C0F95DC00EADC73 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15BE4B952C0F95DC00EADC73 /* WidgetKit.framework */; };
 		15BE4B982C0F95DC00EADC73 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15BE4B972C0F95DC00EADC73 /* SwiftUI.framework */; };
@@ -77,6 +79,8 @@
 		15441B942C077E51001AA91D /* CartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartView.swift; sourceTree = "<group>"; };
 		15441B962C07A02C001AA91D /* SegmentedPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedPicker.swift; sourceTree = "<group>"; };
 		156357812CAB3D4900B54265 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		156357862CAC08D300B54265 /* FillNameinProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FillNameinProfile.swift; sourceTree = "<group>"; };
+		156357882CAC1ABA00B54265 /* SelectCityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectCityView.swift; sourceTree = "<group>"; };
 		1568620A2C6D2B0E00328FC5 /* AuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthView.swift; sourceTree = "<group>"; };
 		157D78952C0242A1001DED58 /* userAppSUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = userAppSUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		157D78982C0242A1001DED58 /* userAppSUIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = userAppSUIApp.swift; sourceTree = "<group>"; };
@@ -113,7 +117,7 @@
 				15441B662C069347001AA91D /* Alamofire in Frameworks */,
 				157D78B92C04FFB5001DED58 /* SnapKit in Frameworks */,
 				157D78B12C024502001DED58 /* AlamofireImage in Frameworks */,
-				15BE4B842C0E0ED000EADC73 /* SwiftUIIntrospect in Frameworks */,
+				156357852CAC073B00B54265 /* SwiftUIIntrospect in Frameworks */,
 				150FE32D2C272AB300206E69 /* Kingfisher in Frameworks */,
 				150F47B82C9F454200A6D729 /* Lottie in Frameworks */,
 			);
@@ -143,6 +147,8 @@
 			isa = PBXGroup;
 			children = (
 				156357812CAB3D4900B54265 /* ProfileView.swift */,
+				156357862CAC08D300B54265 /* FillNameinProfile.swift */,
+				156357882CAC1ABA00B54265 /* SelectCityView.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -335,9 +341,9 @@
 				157D78B02C024502001DED58 /* AlamofireImage */,
 				157D78B82C04FFB5001DED58 /* SnapKit */,
 				15441B652C069347001AA91D /* Alamofire */,
-				15BE4B832C0E0ED000EADC73 /* SwiftUIIntrospect */,
 				150FE32C2C272AB300206E69 /* Kingfisher */,
 				150F47B72C9F454200A6D729 /* Lottie */,
+				156357842CAC073B00B54265 /* SwiftUIIntrospect */,
 			);
 			productName = userAppSUI;
 			productReference = 157D78952C0242A1001DED58 /* userAppSUI.app */;
@@ -391,9 +397,9 @@
 				157D78AF2C024502001DED58 /* XCRemoteSwiftPackageReference "AlamofireImage" */,
 				157D78B72C04FFB5001DED58 /* XCRemoteSwiftPackageReference "SnapKit" */,
 				15441B642C069347001AA91D /* XCRemoteSwiftPackageReference "Alamofire" */,
-				15BE4B822C0E0ED000EADC73 /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */,
 				150FE32B2C272AB300206E69 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				150F47B62C9F454200A6D729 /* XCRemoteSwiftPackageReference "lottie-ios" */,
+				156357832CAC073B00B54265 /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */,
 			);
 			productRefGroup = 157D78962C0242A1001DED58 /* Products */;
 			projectDirPath = "";
@@ -439,6 +445,7 @@
 				15441B632C0655AB001AA91D /* CollectionView.swift in Sources */,
 				15000B532C83563100DB45BC /* AuthCode.swift in Sources */,
 				15BE4B8E2C0F60CB00EADC73 /* StatusBar.swift in Sources */,
+				156357892CAC1ABA00B54265 /* SelectCityView.swift in Sources */,
 				157D789B2C0242A1001DED58 /* ContentView.swift in Sources */,
 				1568620B2C6D2B0E00328FC5 /* AuthView.swift in Sources */,
 				15DDA3D72C6F90A1000D79C2 /* MainMenuViewModel.swift in Sources */,
@@ -448,6 +455,7 @@
 				157D78992C0242A1001DED58 /* userAppSUIApp.swift in Sources */,
 				15B42C3F2CA4504200CE398C /* EatCategoryModel.swift in Sources */,
 				15BE4B7C2C0B9D6600EADC73 /* DostView.swift in Sources */,
+				156357872CAC08D300B54265 /* FillNameinProfile.swift in Sources */,
 				15B42C3A2CA449BA00CE398C /* EatCategoryView.swift in Sources */,
 				15B42C3C2CA44BBA00CE398C /* SelectEatNet.swift in Sources */,
 			);
@@ -780,6 +788,14 @@
 				minimumVersion = 5.9.1;
 			};
 		};
+		156357832CAC073B00B54265 /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/siteline/SwiftUI-Introspect";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.3.0;
+			};
+		};
 		157D78AF2C024502001DED58 /* XCRemoteSwiftPackageReference "AlamofireImage" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Alamofire/AlamofireImage";
@@ -794,14 +810,6 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 5.7.1;
-			};
-		};
-		15BE4B822C0E0ED000EADC73 /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/siteline/SwiftUI-Introspect";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.1.4;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -822,6 +830,11 @@
 			package = 15441B642C069347001AA91D /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
 		};
+		156357842CAC073B00B54265 /* SwiftUIIntrospect */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 156357832CAC073B00B54265 /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */;
+			productName = SwiftUIIntrospect;
+		};
 		157D78B02C024502001DED58 /* AlamofireImage */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 157D78AF2C024502001DED58 /* XCRemoteSwiftPackageReference "AlamofireImage" */;
@@ -831,11 +844,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 157D78B72C04FFB5001DED58 /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
-		};
-		15BE4B832C0E0ED000EADC73 /* SwiftUIIntrospect */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 15BE4B822C0E0ED000EADC73 /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */;
-			productName = SwiftUIIntrospect;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

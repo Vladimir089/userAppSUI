@@ -94,6 +94,7 @@ struct MainMenu: View {
                         .frame(width: 30, height: 30)
                         .fullScreenCover(isPresented: $isProfileOpen) {
                             ProfileView(isProfileOpen: $isProfileOpen, phoneNumber: $mainMenuModel.phoneNumber, menu: mainMenuModel)
+                                .ignoresSafeArea(.keyboard)
                         }
                     }
                     .padding(.horizontal)
