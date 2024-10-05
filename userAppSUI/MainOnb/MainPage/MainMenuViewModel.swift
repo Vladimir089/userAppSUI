@@ -17,13 +17,12 @@ class MainMenuViewModel: ObservableObject {
     @Published var isAuth = true
     @Published var token = ""
     @Published var phoneNumber = ""
-    
+    @Published var selectedCategory = " "
     
     
     
     //auth
     func authNumberPhone(phone: String, completion: @escaping (Bool) -> Void) {
-        // Параметры для запроса
         let parameters: [String: Any] = [
             "phone": phone
         ]
@@ -67,6 +66,7 @@ class MainMenuViewModel: ObservableObject {
             switch response.result {
             case .success(let value):
                 print("Success with JSON: \(value)")
+                self.selectedCategory = "Eat"
                 completion(true) // Возвращаем true в случае успеха
             case .failure(let error):
                 print("Error: \(error)")
@@ -87,6 +87,7 @@ class MainMenuViewModel: ObservableObject {
         if let token = UserDefaults.standard.object(forKey: "TokenNew") as? String {
             self.token = token
             isAuth = true
+            selectedCategory = "Eat"
         } else {
             isAuth = false
         }

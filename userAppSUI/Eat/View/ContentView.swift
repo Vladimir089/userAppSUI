@@ -27,7 +27,7 @@ struct ContentView: View {
         self.checkStatusModelView = checkStatus(mainModel: netWorkingInstance)
         self.netWorking.cafeID = cafe.id
         self.netWorking.phoneNumber = phone
-        print( "dsfdsffdsdfsfs")
+        self.netWorking.cafeNumber = cafe.number
     }
     
     var body: some View {

@@ -120,7 +120,7 @@ class checkStatus: ObservableObject {
                         Spacer()
                         
                         Button(action: {
-                            let phoneNumber = "+79380312109"
+                            let phoneNumber = self.mainModel.cafeNumber
                             if let phoneURL = URL(string: "tel://\(phoneNumber)"),
                                UIApplication.shared.canOpenURL(phoneURL) {
                                 UIApplication.shared.open(phoneURL, options: [:], completionHandler: nil)

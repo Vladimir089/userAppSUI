@@ -32,6 +32,7 @@ class Networking: ObservableObject {
     //cafe info
     @Published var cafeID = 0
     @Published var token  = ""
+    @Published var cafeNumber = ""
 
     
     

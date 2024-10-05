@@ -31,7 +31,6 @@ struct MainMenu: View {
                             }
                             .frame(width: 170, height: 194)
                             .padding()
-                            .disabled(true)
                             
                             Spacer()
                             
@@ -43,8 +42,10 @@ struct MainMenu: View {
                                     Image("eat")
                                         .resizable()
                                         .frame(width: 170, height: 94)
+                                        
                                 }
                                 .frame(width: 170, height: 94)
+                                
                                 
                                 
                                 Button(action: {
@@ -63,7 +64,6 @@ struct MainMenu: View {
                             switch selectedCategory {
                             case "Eat":
                                 EatCategoryView(token: mainMenuModel.token, numberPhone: mainMenuModel.phoneNumber)
-                                
                             case "Taxi", "Announcements":
                                 Text("Скоро!")
                             default:
@@ -109,6 +109,10 @@ struct MainMenu: View {
             }
             .onAppear(perform: {
                 mainMenuModel.checkToken()
+                if mainMenuModel.token != "" {
+                    selectedCategory = mainMenuModel.selectedCategory
+                }
+                
             })
             .fullScreenCover(isPresented: Binding<Bool>(
                 get: { !mainMenuModel.isAuth },
